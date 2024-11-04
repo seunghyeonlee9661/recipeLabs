@@ -1,0 +1,60 @@
+name: Deploy to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Copy files via SSH
+        run: |
+          rsync -avz --exclude '.git/' --chown=leesh:leesh -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.USER }}@${{ secrets.HOST }}:/home/leesh/recipeLabs
+
+      - name: Create environment variables file
+        run: |
+          echo "DB_URL=${{ secrets.DB_URL }}" > .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+          echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+          echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env
+
+      - name: Upload environment variables file to server
+        run: |
+          scp -o StrictHostKeyChecking=no .env ${{ secrets.USER }}@${{ secrets.HOST }}:/home/leesh/recipeLabs
+
+      - name: Fix permissions on server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+          chown -R leesh:leesh /home/leesh/recipeLabs
+          EOF
+
+      - name: Build and start Spring application on server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+          cd /home/leesh/recipeLabs
+          
+          # Stop existing application if running
+          pkill -f './gradlew bootRun' || true
+
+          # Read .env file and export variables
+          export $(grep -v '^#' .env | xargs)
+          
+          # Start the new application
+          nohup ./gradlew bootRun > bootRun.log 2>&1 &
+          EOF
