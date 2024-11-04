@@ -50,16 +50,14 @@ jobs:
           cd /home/leesh/recipeLabs
           
           # Stop existing application if running
-          pkill -f './gradlew bootRun' || true
+          pkill -f './gradlew recipeLabs' || true
           
           # Set execute permission for gradlew
           chmod +x gradlew
 
           # Read .env file and export variables
           export $(grep -v '^#' .env | xargs)
-          
-          ./gradlew clean build --refresh-dependencies
-          
+                    
           # Start the new application
-          nohup ./gradlew bootRun > bootRun.log 2>&1 &
+          nohup ./gradlew recipeLabs > recipeLabs.log 2>&1 &
           EOF
