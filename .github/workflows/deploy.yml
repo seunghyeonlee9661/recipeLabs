@@ -58,6 +58,8 @@ jobs:
           # Read .env file and export variables
           export $(grep -v '^#' .env | xargs)
           
+          ./gradlew clean build --refresh-dependencies
+          
           # Start the new application
           nohup ./gradlew bootRun > bootRun.log 2>&1 &
           EOF
