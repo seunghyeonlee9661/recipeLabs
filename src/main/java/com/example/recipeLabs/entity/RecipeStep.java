@@ -18,8 +18,8 @@ public class RecipeStep {
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe; // 회원 정보
 
-    @Column(name = "order", nullable = false)
-    private Integer order; // 단계 순서
+    @Column(name = "step_order", nullable = false)
+    private Integer stepOrder; // 단계 순서
 
     @Column(name = "content",length = 255, nullable = true)
     private String content; // 단계 내용
@@ -32,7 +32,7 @@ public class RecipeStep {
 
     public RecipeStep(RecipeStepCreateRequestDTO requestDTO, Recipe recipe){
         this.recipe = recipe;
-        this.order = requestDTO.getOrder();
+        this.stepOrder = requestDTO.getStepOrder();
         this.content = requestDTO.getContent();
         this.cookingTime = requestDTO.getCookingTime();
         this.image = requestDTO.getImage();
