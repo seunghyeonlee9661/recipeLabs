@@ -27,7 +27,7 @@ public class RecipeStep {
     @Column(name = "cooking_time", length = 255, nullable = true)
     private Integer cookingTime; // 소요 시간
 
-    @Column(name = "time", length = 255, nullable = true)
+    @Column(name = "image", length = 255, nullable = true)
     private String image; // 이미지 URL
 
     public RecipeStep(RecipeStepCreateRequestDTO requestDTO, Recipe recipe){
