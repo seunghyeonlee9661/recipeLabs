@@ -82,16 +82,9 @@ public class SecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .requestMatchers("/error").permitAll() // 오류
-                                .requestMatchers("/api/login").permitAll() // 로그인
-                                .requestMatchers(HttpMethod.POST, "/api/users").permitAll() // 사용자 회원가입
-                                .requestMatchers(HttpMethod.POST, "/api/password/**").permitAll() // 비밀번호 찾기 관련
-                                .requestMatchers(HttpMethod.POST, "/api/kakao/login").permitAll() // 카카오 로그인
-                                .requestMatchers(HttpMethod.GET, "/api/weathers/**").permitAll() // 날씨 정보 접근
-                                .requestMatchers(HttpMethod.GET, "/api/boards/**").permitAll() // 게시물 정보 접근
-                                .requestMatchers(HttpMethod.GET, "/api/recommends/**").permitAll() // 추천 아이템 접근
-                                .requestMatchers(HttpMethod.GET, "/health").permitAll() // 로드밸런서 상태 확인 요청
-                                .requestMatchers("/swagger-ui/**").permitAll()
-                                .requestMatchers("/v3/api-docs/**").permitAll()
+                                .requestMatchers("/login").permitAll() // 로그인
+                                .requestMatchers("/swagger-ui/**").permitAll() //Swagger
+                                .requestMatchers("/v3/api-docs/**").permitAll() //Swagger
                                 .anyRequest().authenticated()
                 )
                 // 에러 핸들러 설정
@@ -99,8 +92,8 @@ public class SecurityConfig {
                 // 로그인 처리 설정
                 .formLogin(formLogin ->
                         formLogin
-                                .loginPage("/login")
-                                .loginProcessingUrl("/api/login")
+                                .loginPage("/login/page")
+                                .loginProcessingUrl("/login")
                                 .permitAll()
                 )
                 // 로그아웃 처리 설정
