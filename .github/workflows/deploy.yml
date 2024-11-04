@@ -51,6 +51,9 @@ jobs:
           
           # Stop existing application if running
           pkill -f './gradlew bootRun' || true
+          
+          # Set execute permission for gradlew
+          chmod +x gradlew
 
           # Read .env file and export variables
           export $(grep -v '^#' .env | xargs)
