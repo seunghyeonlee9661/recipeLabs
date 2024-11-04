@@ -21,20 +21,20 @@ public class RecipeStep {
     @Column(name = "order", nullable = false)
     private Integer order; // 단계 순서
 
-    @Column(length = 255, nullable = true)
+    @Column(name = "content",length = 255, nullable = true)
     private String content; // 단계 내용
 
-    @Column(length = 255, nullable = true)
-    private String time; // 소요 시간
+    @Column(name = "cooking_time", length = 255, nullable = true)
+    private Integer cookingTime; // 소요 시간
 
-    @Column(length = 255, nullable = true)
+    @Column(name = "time", length = 255, nullable = true)
     private String image; // 이미지 URL
 
     public RecipeStep(RecipeStepCreateRequestDTO requestDTO, Recipe recipe){
         this.recipe = recipe;
         this.order = requestDTO.getOrder();
         this.content = requestDTO.getContent();
-        this.time = requestDTO.getTime();
+        this.cookingTime = requestDTO.getCookingTime();
         this.image = requestDTO.getImage();
     }
 }
