@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "recipes_steps")
 @NoArgsConstructor
 public class RecipeStep {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

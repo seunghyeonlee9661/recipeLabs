@@ -43,6 +43,12 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<RecipeStep> recipesSteps;
 
+    @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private List<RecipeLike> recipeLikeList;
+
+    @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private List<RecipeFavorite> recipeFavorites;
+
     public Recipe(RecipeCreateRequestDTO requestDTO, User user){
         this.user = user;
         this.title = requestDTO.getTitle();
@@ -58,7 +64,6 @@ public class Recipe {
         this.description = requestDTO.getDescription();
         this.image = requestDTO.getImage();
         this.ingredients = requestDTO.getIngredients();
-        this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 }
