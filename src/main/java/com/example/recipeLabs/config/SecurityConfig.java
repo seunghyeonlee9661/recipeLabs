@@ -88,12 +88,14 @@ public class SecurityConfig {
                 // 로그인 처리 설정
                 .formLogin(formLogin ->
                         formLogin
-                                .loginProcessingUrl("/users/login")
+                                .loginPage("/users/login") // 명시적으로 로그인 페이지 경로를 설정
+                                .loginProcessingUrl("/users/login") // 로그인 처리를 /users/login에서 수행
                                 .permitAll()
                 )
                 // 로그아웃 처리 설정
                 .logout(logout ->
                         logout
+
                                 .logoutUrl("/users/logout")
                                 .addLogoutHandler(this::handleLogout)
                                 .logoutSuccessHandler(this::handleLogoutSuccess)
