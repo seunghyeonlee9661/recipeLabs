@@ -55,7 +55,15 @@ jobs:
           chmod +x gradlew
           
           # Stop existing application if running
-          pkill -f './gradlew bootRun' || true
+          #pkill -f './gradlew bootRun' || true
+          
+          PID=$(pgrep -f '/home/leesh/recipeLabs/gradle/wrapper/gradle-wrapper.jar') || true
+          echo "Found PID: $PID" # PID 출력
+          
+          if [ ! -z "$PID" ]; then
+            echo "Stopping process with PID: $PID" # 종료할 PID 출력          
+            kill $PID
+          fi
 
           # Read .env file and export variables
           export $(grep -v '^#' .env | xargs)
