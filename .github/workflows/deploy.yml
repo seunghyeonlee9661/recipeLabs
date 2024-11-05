@@ -50,12 +50,12 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
           cd /home/leesh/recipeLabs
-          
-          # Set execute permission for gradlew
-          chmod +x gradlew
-          
+
+#          # Set execute permission for gradlew
+#          chmod +x gradlew
+
           # Stop existing application if running
-          pkill -f './gradlew bootRun' || true   
+          pkill -f './gradlew bootRun' || true
 
           # Read .env file and export variables
           export $(grep -v '^#' .env | xargs)
