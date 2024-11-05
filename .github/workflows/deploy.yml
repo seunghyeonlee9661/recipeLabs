@@ -54,7 +54,16 @@ jobs:
           chmod +x gradlew
 
           # Stop existing application if running
-          pkill -f './gradlew bootRun' || true
+          # pkill -f './gradlew bootRun' || true
+          
+          PID=$(lsof -t -i :8087)
+    
+          # If PID is found, kill the process
+          if [ -n "$PID" ]; then
+            kill -9 $PID
+          else
+            echo "No process found on port 8080."
+          fi
 
           # Read .env file and export variables
           export $(grep -v '^#' .env | xargs)
