@@ -51,6 +51,7 @@ public class UserService {
     @Transactional
     public ResponseEntity<String> verifyUser(Long userId,String code){
         User user = userRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
+        if(user.isEmailVerified()) return ResponseEntity.ok("이미 완료된 이메일 입니다.");
         if(user.getEmailVerificationCode().equals(code)){
             user.setEmailVerified();
             return ResponseEntity.ok("이메일 인증이 완료되었습니다.");
