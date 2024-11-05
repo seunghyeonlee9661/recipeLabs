@@ -59,3 +59,11 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register('recipeLabs', JavaExec) {
+	group = 'application'
+	description = 'Runs the Recipe Labs application'
+	mainClass.set('com.example.recipeLabs.RecipeLabsApplication') // 메인 클래스의 경로
+	classpath = sourceSets.main.runtimeClasspath
+	jvmArgs = ['-Xmx512m', '-Xms256m'] // 필요에 따라 JVM 메모리 설정 조정
+}
