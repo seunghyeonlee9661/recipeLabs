@@ -44,30 +44,22 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
           chown -R leesh:leesh /home/leesh/recipeLabs
+          EOF
 
       - name: Build and start Spring application on server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
           cd /home/leesh/recipeLabs
-
+          
           # Set execute permission for gradlew
           chmod +x gradlew
-
-          # Stop existing application if running
-          # pkill -f './gradlew bootRun' || true
           
-          PID=$(lsof -t -i :8087)
-    
-          # If PID is found, kill the process
-          if [ -n "$PID" ]; then
-            kill -9 $PID
-          else
-            echo "No process found on port 8080."
-          fi
+          # Stop existing application if running
+          pkill -f './gradlew recipeLabs' || true
 
           # Read .env file and export variables
           export $(grep -v '^#' .env | xargs)
                     
           # Start the new application
-          nohup ./gradlew bootRun > bootRun.log 2>&1 &
+          nohup ./gradlew recipeLabs > recipeLabs.log 2>&1 &
           EOF
