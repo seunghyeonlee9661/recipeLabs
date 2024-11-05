@@ -85,8 +85,8 @@ public class SecurityConfig {
 //                                .requestMatchers("/login").permitAll() // 로그인
 //                                .requestMatchers("/swagger-ui/**").permitAll() //Swagger
 //                                .requestMatchers("/v3/api-docs/**").permitAll() //Swagger
+//                                .anyRequest().authenticated()
                                 .anyRequest().permitAll() // 모든 요청 허용
-                                .anyRequest().authenticated()
                 )
                 // 에러 핸들러 설정
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint))
