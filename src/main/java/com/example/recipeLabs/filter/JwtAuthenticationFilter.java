@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     /* 로그인 과정 진행 위치 */
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        setFilterProcessesUrl("/api/login");
+        setFilterProcessesUrl("/users/login");
     }
 
     /* 로그인 진행 및 JWT 토큰 반환 */
