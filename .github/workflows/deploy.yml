@@ -44,7 +44,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
           chown -R leesh:leesh /home/leesh/recipeLabs
-          EOF
 
       - name: Build and start Spring application on server
         run: |
