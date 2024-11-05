@@ -10,8 +10,9 @@ public class RefrigeratorItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId; // 사용자 ID
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user; // 유저
 
     @Column(length = 255, nullable = false)
     private String ingredient; // 재료
