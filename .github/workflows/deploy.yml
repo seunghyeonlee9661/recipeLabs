@@ -54,8 +54,14 @@ jobs:
           # Set execute permission for gradlew
           chmod +x gradlew
           
-          # Stop existing application if running
-          pkill -f './gradlew recipeLabs' || true
+          port=8087
+          pid=$(lsof -t -i:$port)
+          if [ -n "$pid" ]; then
+            echo "Stopping process on port $port (PID: $pid)"
+            kill -9 $pid
+          else
+            echo "No process found on port $port."
+          fi
 
           # Read .env file and export variables
           export $(grep -v '^#' .env | xargs)
