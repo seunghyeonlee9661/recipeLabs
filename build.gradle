@@ -51,6 +51,9 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 	//SMTP
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+	// Webp
+	implementation 'com.sksamuel.scrimage:scrimage-webp:4.1.1'
+	implementation 'net.coobird:thumbnailator:0.4.14'
 }
 
 tasks.named('test') {
