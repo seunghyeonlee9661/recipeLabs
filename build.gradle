@@ -56,10 +56,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-tasks.register('recipeLabs', JavaExec) {
-	group = 'application'
-	description = 'recipeLabs Spring application'
-	classpath = sourceSets.main.runtimeClasspath
-	mainClass = 'com.example.recipeLabs.RecipeLabsApplication' // 주 클래스 경로 설정
-}
