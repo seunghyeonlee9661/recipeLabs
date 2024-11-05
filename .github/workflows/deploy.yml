@@ -64,5 +64,5 @@ jobs:
           export $(grep -v '^#' .env | xargs)
                     
           # Start the new application
-          nohup ./gradlew --no-daemon bootRun > bootRun.log 2>&1 &
+          nohup ./gradlew bootRun > bootRun.log 2>&1 &
           EOF
