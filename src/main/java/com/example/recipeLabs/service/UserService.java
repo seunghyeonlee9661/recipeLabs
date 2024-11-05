@@ -38,9 +38,11 @@ public class UserService {
         String subject = "RecipeLabs 회원가입 인증 메일 발송"; // 제목
         String text = "인증 링크 - http://dltmdgus9661.iptime.org:8087/users/verify?userId=" + userId + "&code=" + code; // 인증 링크 // TODO:인증 링크 경로 수정 필요
         // 인증 메일 발송
-        if(emailService.sendEmail(subject,text,user.getEmail())){
+        if(emailService.sendEmail(user.getEmail(),subject,text)){
             return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 완료 - 이메일 인증을 해주세요");
         }else{
+            // 메일 전송 실패의 경우 계정 삭제
+            userRepository.delete(user);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("메일 전송에 실패했습니다");
         }
     }

@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,10 +32,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.io.IOException;
 import java.util.Arrays;
 
-/*
-작성자 : 이승현
-JWT 시큐리티 관련
- */
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
 @AllArgsConstructor
