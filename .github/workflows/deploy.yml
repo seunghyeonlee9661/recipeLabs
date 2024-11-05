@@ -52,7 +52,7 @@ jobs:
           cd /home/leesh/recipeLabs
           
           # Stop existing application if running
-          pkill -f './gradlew bootRun' || true
+          pkill -f '/home/leesh/recipeLabs/gradlew bootRun' || true
           
           # Set execute permission for gradlew
           chmod +x gradlew
