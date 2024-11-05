@@ -50,8 +50,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
           cd /home/leesh/recipeLabs
 
-#          # Set execute permission for gradlew
-#          chmod +x gradlew
+          # Set execute permission for gradlew
+          chmod +x gradlew
 
           # Stop existing application if running
           pkill -f './gradlew bootRun' || true
