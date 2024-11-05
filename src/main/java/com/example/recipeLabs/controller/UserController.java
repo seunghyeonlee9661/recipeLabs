@@ -24,7 +24,7 @@ public class UserController {
     private final UserService userService;
 
     /* 사용자 회원가입 */
-    @PostMapping("/signup")
+    @PostMapping("")
     public ResponseEntity<String> createUser( @Valid @RequestBody UserCreateRequestDTO requestDTO) {
         return userService.createUser(requestDTO);
     }
@@ -33,6 +33,12 @@ public class UserController {
     @GetMapping("/verify")
     public ResponseEntity<String> verifyUser(@RequestParam Long userId, @RequestParam String code) {
         return userService.verifyUser(userId, code);
+    }
+
+    /* 사용자 탈퇴 */
+    @DeleteMapping("")
+    public ResponseEntity<String>  removeUser(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse res) throws IOException {
+        return userService.removeUser(userDetails,res);
     }
 
 

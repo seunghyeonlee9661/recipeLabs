@@ -2,7 +2,11 @@ package com.example.recipeLabs.service;
 
 import com.example.recipeLabs.dto.UserCreateRequestDTO;
 import com.example.recipeLabs.entity.User;
+import com.example.recipeLabs.enums.Provider;
 import com.example.recipeLabs.repository.UserRepository;
+import com.example.recipeLabs.security.JwtUtil;
+import com.example.recipeLabs.security.UserDetailsImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -19,6 +24,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final ImageService imageService;
+    private final JwtUtil jwtUtil;
 
     /* 회원가입 - 메일 전송 */
     @Transactional
@@ -59,4 +66,20 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.CREATED).body("올바르지 않는 코드입니다.");
         }
     }
+
+    /* 회원 탈퇴*/
+    @Transactional
+    public ResponseEntity<String> removeUser(UserDetailsImpl userDetails, HttpServletResponse res) throws IOException {
+        User user = userDetails.getUser();
+        // 사용자가 기본 계정인 경우
+        if(user.getProvider().equals(Provider.LOCAL) && user.getProfileImage() != null){// 사용자가 기본 계정인 경우
+            imageService.deleteFileByUrl(user.getProfileImage()); //이미지 삭제
+        }
+        // 사용자 삭제
+        userRepository.delete(user);
+        // 쿠키 삭제
+        jwtUtil.removeJwtCookie(res);
+        return ResponseEntity.ok().body("User deleted successfully");
+    }
+
 }
