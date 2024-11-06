@@ -41,20 +41,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             // 로그: 로그인 시도
             log.info("로그인 시도: {}", request.getRequestURI());
-
             // 요청에서 로그인 정보를 읽어와 DTO로 변환
             UserLoginRequestDTO requestDto = new ObjectMapper().readValue(request.getInputStream(), UserLoginRequestDTO.class);
-
             // 로그: 사용자 정보
             log.info("로그인 요청 사용자: {}", requestDto.getUsername());
             // 인증 처리
-            return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            requestDto.getUsername(),
-                            requestDto.getPassword(),
-                            null
-                    )
-            );
+            return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(requestDto.getUsername(),requestDto.getPassword(),null));
         } catch (IOException e) {
             // 로그: 로그인 처리 중 오류
             log.error("로그인 처리 중 오류: {}", e.getMessage(), e);
@@ -69,20 +61,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // 로그: 로그인 성공
         log.info("로그인 성공: 사용자 - {}", user.getName());
+        if(user.isEmailVerified()){
+            // AccessToken 및 RefreshToken 생성
+            String accessToken = jwtUtil.createAccessToken(user);
+            String refreshToken = jwtUtil.createRefreshToken(user);
 
-        // AccessToken 및 RefreshToken 생성
-        String accessToken = jwtUtil.createAccessToken(user);
-        String refreshToken = jwtUtil.createRefreshToken(user);
+            // 로그: JWT 토큰 생성
+            log.info("JWT 토큰 생성: AccessToken - {}, RefreshToken - {}", accessToken, refreshToken);
 
-        // 로그: JWT 토큰 생성
-        log.info("JWT 토큰 생성: AccessToken - {}, RefreshToken - {}", accessToken, refreshToken);
+            // Redis 및 쿠키에 토큰 저장
+            jwtUtil.addTokenToRedis(accessToken, refreshToken);
+            jwtUtil.addTokenToCookie(accessToken, response);
 
-        // Redis 및 쿠키에 토큰 저장
-        jwtUtil.addTokenToRedis(accessToken, refreshToken);
-        jwtUtil.addTokenToCookie(accessToken, response);
-
-        // 성공 응답 전송
-        sendResponse(response, HttpStatus.OK, "로그인 성공");
+            // 성공 응답 전송
+            sendResponse(response, HttpStatus.OK, "로그인 성공");
+        }else{
+            sendResponse(response, HttpStatus.UNAUTHORIZED, "메일 인증이 필요합니다.");
+        }
     }
 
     /* 로그인 실패 */
