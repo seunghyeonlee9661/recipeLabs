@@ -20,8 +20,10 @@ public class RequestLoggingFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         logger.info("________________________________________________________");
-        // 요청 URL 및 쿠키 정보 로그
+
+        // 요청 URL, HTTP 메서드 및 쿠키 정보 로그
         logger.info("Request URL: " + httpRequest.getRequestURL());
+        logger.info("Request Method: " + httpRequest.getMethod());
         logger.info("Request Cookies: " + Arrays.toString(httpRequest.getCookies()));
 
         // 필터 체인의 다음 필터로 요청을 전달
