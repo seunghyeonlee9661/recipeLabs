@@ -47,7 +47,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             // 로그: 사용자 정보
             log.info("로그인 요청 사용자: {}", requestDto.getUsername());
-
             // 인증 처리
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(

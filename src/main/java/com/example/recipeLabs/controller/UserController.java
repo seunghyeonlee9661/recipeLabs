@@ -41,6 +41,12 @@ public class UserController {
         return userService.removeUser(userDetails,res);
     }
 
+        /* 사용자 정보 요청 */
+    @GetMapping("")
+    public ResponseEntity<UserResponseDTO> findUser(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.ok(new UserResponseDTO(userDetails.getUser()));
+    }
+
 
 //    /* 사용자 정보 요청 */
 //    @GetMapping("")
