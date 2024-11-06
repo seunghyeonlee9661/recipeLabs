@@ -87,4 +87,5 @@ public class User {
     public void setEmailVerified(){
         this.emailVerified = true;
     }
+
 }
