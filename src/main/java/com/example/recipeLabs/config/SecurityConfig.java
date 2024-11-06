@@ -9,8 +9,6 @@ import com.example.recipeLabs.service.RedisService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +43,6 @@ import java.util.Arrays;
 @AllArgsConstructor
 public class SecurityConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final RedisService redisService;
@@ -95,26 +92,25 @@ public class SecurityConfig {
                 )
                 // 에러 핸들러 설정
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint))
-//                // 로그인 처리 설정
-//                .formLogin(formLogin ->
-//                        formLogin
-//                                .loginPage("/users/login") // 명시적으로 로그인 페이지 경로를 설정
-//                                .loginProcessingUrl("/users/login") // 로그인 처리를 /users/login에서 수행
-//                                .permitAll()
-//                )
-//                // 로그아웃 처리 설정
-//                .logout(logout ->
-//                        logout
-//
-//                                .logoutUrl("/users/logout")
-//                                .addLogoutHandler(this::handleLogout)
-//                                .logoutSuccessHandler(this::handleLogoutSuccess)
-//                                .permitAll()
-//                )
+                // 로그인 처리 설정
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/users/login") // 명시적으로 로그인 페이지 경로를 설정
+                                .loginProcessingUrl("/users/login") // 로그인 처리를 /users/login에서 수행
+                                .permitAll()
+                )
+                // 로그아웃 처리 설정
+                .logout(logout ->
+                        logout
+
+                                .logoutUrl("/users/logout")
+                                .addLogoutHandler(this::handleLogout)
+                                .logoutSuccessHandler(this::handleLogoutSuccess)
+                                .permitAll()
+                )
                 // Oauth2 설정
-                .oauth2Login((oauth2) -> oauth2
+                .oauth2Login((oauth2Login) -> oauth2Login
                         .loginPage("/login")
-                        .loginProcessingUrl("/users/login")
                         .successHandler(successHandler())
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(OAuth2UserService))
                 )
@@ -157,7 +153,6 @@ public class SecurityConfig {
     // Oauth2 성공 처리
     @Bean
     public AuthenticationSuccessHandler successHandler() {
-        log.info("successHandler 접근!!!");
         return ((request, response, authentication) -> {
             DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
 
@@ -165,8 +160,6 @@ public class SecurityConfig {
             String body = """
                     {"id":"%s"}
                     """.formatted(id);
-
-            log.info("Login Success: {}", id);
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
