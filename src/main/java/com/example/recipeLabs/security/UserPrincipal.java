@@ -26,7 +26,6 @@ public class UserPrincipal implements OAuth2User {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
     }
-
     /**
      * OAuth2User method implements
      */
