@@ -161,6 +161,7 @@ public class SecurityConfig {
                     {"id":"%s"}
                     """.formatted(id);
 
+
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
