@@ -19,12 +19,10 @@ public class UserPrincipal implements OAuth2User {
 
     public UserPrincipal(User user) {
         this.user = user;
-        this.authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getKey()));
     }
 
     public UserPrincipal(User user, Map<String, Object> attributes, String nameAttributeKey) {
         this.user = user;
-        this.authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getKey()));
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
     }
@@ -34,6 +32,6 @@ public class UserPrincipal implements OAuth2User {
      */
     @Override
     public String getName() {
-        return user.getIdentifier();
+        return user.getName();
     }
 }
