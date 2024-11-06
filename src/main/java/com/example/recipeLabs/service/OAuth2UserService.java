@@ -3,6 +3,7 @@ package com.example.recipeLabs.service;
 import com.example.recipeLabs.entity.User;
 import com.example.recipeLabs.enums.Provider;
 import com.example.recipeLabs.repository.UserRepository;
+import com.example.recipeLabs.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
         // DB 저장로직이 필요하면 추가
-        return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName);
+        return new UserPrincipal(user, oAuth2User.getAttributes(), userNameAttributeName);
     }
 
     /**
