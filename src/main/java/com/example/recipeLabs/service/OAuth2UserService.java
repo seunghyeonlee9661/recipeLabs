@@ -54,9 +54,14 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 });
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.info("SecurityContextHolder 저장");
+
+        String userNameAttributeName = userRequest.getClientRegistration()
+                .getProviderDetails()
+                .getUserInfoEndpoint()
+                .getUserNameAttributeName();
         // DB 저장로직이 필요하면 추가
-        log.info("OAuth2UserService 종료");
-        return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), "name");
+        return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName);
     }
 
     /**
