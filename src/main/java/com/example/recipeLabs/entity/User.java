@@ -69,17 +69,18 @@ public class User {
     }
 
     // Oauth 유저 생성
-    public User(UserOauthCreateRequestDTO requetDTO){
-        this.email = requetDTO.getEmail();
-        this.password = requetDTO.getPassword();
-        this.provider = requetDTO.getProvider();
-        this.providerId = requetDTO.getProviderId();
-        this.name = requetDTO.getName();
-        this.profileImage = requetDTO.getProfileImage();
+    public User(String email, String password, Provider provider, String providerId, String name, String profileImage) {
+        this.email = email;
+        this.password = password;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.name = name;
+        this.profileImage = profileImage;
         this.createdAt = LocalDateTime.now();
+        this.emailVerified = true;
     }
 
-    // 사용자
+    // 사용자 메일 인증
     public void setEmailVerified(){
         this.emailVerified = true;
     }
