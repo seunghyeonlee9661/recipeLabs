@@ -6,6 +6,7 @@ import com.example.recipeLabs.security.JwtUtil;
 import com.example.recipeLabs.security.UserDetailsServiceImpl;
 import com.example.recipeLabs.service.OAuth2UserService;
 import com.example.recipeLabs.service.RedisService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
@@ -156,11 +158,11 @@ public class SecurityConfig {
         return ((request, response, authentication) -> {
             DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
 
-            String id = defaultOAuth2User.getAttributes().get("id").toString();
-            String body = """
-                    {"id":"%s"}
-                    """.formatted(id);
+            // 모든 속성 출력
+            Map<String, Object> attributes = defaultOAuth2User.getAttributes();
 
+            // JSON으로 출력
+            String body = new ObjectMapper().writeValueAsString(attributes);
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
