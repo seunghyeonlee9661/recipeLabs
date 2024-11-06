@@ -50,6 +50,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                             (String) attributes.get("name"),
                             (String) attributes.get("profileImage")
                     );
+                    log.info("새 회원 - 회원가입");
                     return userRepository.save(newUser);
                 });
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
