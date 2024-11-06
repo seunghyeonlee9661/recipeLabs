@@ -113,7 +113,7 @@ public class SecurityConfig {
                 )
                 // Oauth2 설정
                 .oauth2Login((oauth2) -> oauth2
-                        .loginPage("/users/login")
+                        .loginPage("/login")
                         .successHandler(successHandler())
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(OAuth2UserService))
                 )
