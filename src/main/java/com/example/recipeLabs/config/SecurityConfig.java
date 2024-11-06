@@ -157,16 +157,12 @@ public class SecurityConfig {
     public AuthenticationSuccessHandler successHandler() {
         return ((request, response, authentication) -> {
             DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
-
             // 모든 속성 출력
             Map<String, Object> attributes = defaultOAuth2User.getAttributes();
-
             // JSON으로 출력
             String body = new ObjectMapper().writeValueAsString(attributes);
-
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-
             PrintWriter writer = response.getWriter();
             writer.println(body);
             writer.flush();

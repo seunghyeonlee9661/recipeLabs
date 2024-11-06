@@ -5,8 +5,11 @@ import com.example.recipeLabs.enums.Provider;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "user")
@@ -36,6 +39,8 @@ public class User {
     @Column(name = "profile_image", length = 255, nullable = true)
     private String profileImage;
 
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     // 이메일 인증 여부 필드
@@ -64,19 +69,17 @@ public class User {
         this.password = password;
         this.provider = Provider.LOCAL;
         this.name = requetDTO.getName();
-        this.createdAt = LocalDateTime.now();
         this.emailVerificationCode = code;
     }
 
     // Oauth 유저 생성
-    public User(String email, String password, Provider provider, String providerId, String name, String profileImage) {
+    public User(String email, Provider provider, String providerId, String name, String profileImage) {
         this.email = email;
-        this.password = password;
+        this.password =  UUID.randomUUID().toString();
         this.provider = provider;
         this.providerId = providerId;
         this.name = name;
         this.profileImage = profileImage;
-        this.createdAt = LocalDateTime.now();
         this.emailVerified = true;
     }
 
