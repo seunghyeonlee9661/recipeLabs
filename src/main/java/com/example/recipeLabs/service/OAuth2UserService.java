@@ -65,7 +65,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         // DB 저장로직이 필요하면 추가
         return new UserPrincipal(user, oAuth2User.getAttributes(), userNameAttributeName);
     }
-
     /**
      * 각 플랫폼의 키에 맞게 속성 값 추출
      */
