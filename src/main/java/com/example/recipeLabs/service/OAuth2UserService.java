@@ -1,5 +1,7 @@
 package com.example.recipeLabs.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -12,8 +14,11 @@ import java.util.List;
 
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
+    private static final Logger log = LoggerFactory.getLogger(OAuth2UserService.class);
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        log.info("OAuth2UserService 접근");
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         // Role generate
@@ -24,8 +29,10 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
 
-        // DB 저장로직이 필요하면 추가
+        log.info("userNameAttributeName");
 
+        // DB 저장로직이 필요하면 추가
+        log.info("OAuth2UserService 탈출");
         return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName);
     }
 }

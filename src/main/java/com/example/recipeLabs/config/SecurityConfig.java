@@ -95,25 +95,26 @@ public class SecurityConfig {
                 )
                 // 에러 핸들러 설정
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint))
-                // 로그인 처리 설정
-                .formLogin(formLogin ->
-                        formLogin
-                                .loginPage("/users/login") // 명시적으로 로그인 페이지 경로를 설정
-                                .loginProcessingUrl("/users/login") // 로그인 처리를 /users/login에서 수행
-                                .permitAll()
-                )
-                // 로그아웃 처리 설정
-                .logout(logout ->
-                        logout
-
-                                .logoutUrl("/users/logout")
-                                .addLogoutHandler(this::handleLogout)
-                                .logoutSuccessHandler(this::handleLogoutSuccess)
-                                .permitAll()
-                )
+//                // 로그인 처리 설정
+//                .formLogin(formLogin ->
+//                        formLogin
+//                                .loginPage("/users/login") // 명시적으로 로그인 페이지 경로를 설정
+//                                .loginProcessingUrl("/users/login") // 로그인 처리를 /users/login에서 수행
+//                                .permitAll()
+//                )
+//                // 로그아웃 처리 설정
+//                .logout(logout ->
+//                        logout
+//
+//                                .logoutUrl("/users/logout")
+//                                .addLogoutHandler(this::handleLogout)
+//                                .logoutSuccessHandler(this::handleLogoutSuccess)
+//                                .permitAll()
+//                )
                 // Oauth2 설정
                 .oauth2Login((oauth2) -> oauth2
                         .loginPage("/login")
+                        .loginProcessingUrl("/users/login")
                         .successHandler(successHandler())
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(OAuth2UserService))
                 )
