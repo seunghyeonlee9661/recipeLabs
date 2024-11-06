@@ -1,7 +1,6 @@
 package com.example.recipeLabs.service;
 
 import com.example.recipeLabs.entity.User;
-import com.example.recipeLabs.enums.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
@@ -26,9 +24,11 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         // 사용자 정보
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
 
         // 발급자 확인
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        log.info("registrationId : {}",registrationId);
 
         // 모든 속성 출력 (디버깅용)
         Map<String, Object> attributes = oAuth2User.getAttributes();
@@ -40,9 +40,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
-
-        // Role generate
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
 
         // DB 저장로직이 필요하면 추가
         log.info("OAuth2UserService 종료");
