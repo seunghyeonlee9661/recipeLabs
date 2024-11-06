@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/login")
-public class LoginController  {
+public class LoginController {
     @GetMapping
-    public String login(){
-        return "loginPage";
+    public String login() {
+        return "login"; // login.jsp 또는 login.html로 리턴
     }
 }

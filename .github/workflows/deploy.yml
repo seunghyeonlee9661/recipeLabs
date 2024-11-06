@@ -22,6 +22,11 @@ jobs:
 
       - name: Copy files via SSH
         run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+            rm -rf /home/leesh/recipeLabs/*  # 기존 파일 삭제
+            rm -rf /home/leesh/recipeLabs/.*  # 숨김 파일 (예: .git 등) 삭제
+          EOF
+
           rsync -avz --exclude '.git/' --chown=leesh:leesh -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.USER }}@${{ secrets.HOST }}:/home/leesh/recipeLabs
 
       - name: Create environment variables file
