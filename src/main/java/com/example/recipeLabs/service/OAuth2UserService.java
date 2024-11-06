@@ -18,7 +18,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         // Role generate
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
-
         // nameAttributeKey
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails()
