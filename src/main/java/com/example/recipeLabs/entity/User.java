@@ -48,7 +48,7 @@ public class User {
     private boolean emailVerified = false;
 
     // 인증 코드 필드
-    @Column(length = 255, nullable = false)
+    @Column(length = 255, nullable = true)
     private String emailVerificationCode;  
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
