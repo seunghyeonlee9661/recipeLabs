@@ -21,9 +21,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     /* 인증 확인 작업 */
+    public UserDetails loadUserByUsernameAndProvider(String username,String provider) throws UsernameNotFoundException {
+        User user = userRepository.findByEmailAndProvider(username, Provider.valueOf(provider)).orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
+        return new UserDetailsImpl(user);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmailAndProvider(username, Provider.LOCAL).orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
-        return new UserDetailsImpl(user);
+        return null;
     }
 }

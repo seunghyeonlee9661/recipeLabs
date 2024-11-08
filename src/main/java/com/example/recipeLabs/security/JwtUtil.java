@@ -1,6 +1,7 @@
 package com.example.recipeLabs.security;
 
 import com.example.recipeLabs.entity.User;
+import com.example.recipeLabs.enums.Provider;
 import com.example.recipeLabs.repository.UserRepository;
 import com.example.recipeLabs.service.RedisService;
 import io.jsonwebtoken.*;
@@ -62,6 +63,7 @@ public class JwtUtil {
         Map<String, Object> additionalClaims = new HashMap<>();
         /* 클레임으로정보 추가 가능*/
         additionalClaims.put("name", user.getName());
+        additionalClaims.put("provider", user.getProviderId());
         Date date = new Date();
         return BEARER_PREFIX + Jwts.builder()
                         .setSubject(String.valueOf(user.getEmail())) // 사용자 식별자값(ID)
@@ -74,9 +76,13 @@ public class JwtUtil {
 
     // Refresh 토큰 생성
     public String createRefreshToken(User user) {
+        /* 클레임으로정보 추가 가능*/
+        Map<String, Object> additionalClaims = new HashMap<>();
+        additionalClaims.put("provider", user.getProviderId());
         Date date = new Date();
         return Jwts.builder()
                         .setSubject(String.valueOf(user.getEmail())) // 사용자 식별자값(ID)
+                        .addClaims(additionalClaims)
                         .setExpiration(new Date(date.getTime() + RedisService.REFRESH_TOKEN_VALIDITY)) // 만료 시간
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘
                         .compact();
@@ -149,8 +155,11 @@ public class JwtUtil {
         // Refresh Token이 올바른지 확인
         if (storedRefreshToken != null && validateToken(storedRefreshToken)) {
             // Refresh Token으로부터 사용자의 정보 추출
-            String email = getUserInfoFromToken(storedRefreshToken).getSubject();
-            User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found for email: " + email));
+            Claims claims = getUserInfoFromToken(storedRefreshToken);
+            String email = claims.getSubject();
+            String provider = claims.get("provider", String.class);
+            // Claims에서 정보를 찾아 토큰에 저장 
+            User user = userRepository.findByEmailAndProvider(email, Provider.valueOf(provider)).orElseThrow(() -> new IllegalArgumentException("User not found for email: " + email));
             long remainingValidity = redisService.getExpiration(RedisService.REFRESH_TOKEN_PREFIX,strippedAccessToken);
             // 기존 refreshToken 삭제
             redisService.delete(RedisService.REFRESH_TOKEN_PREFIX,strippedAccessToken);

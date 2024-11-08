@@ -65,14 +65,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // AccessToken 및 RefreshToken 생성
             String accessToken = jwtUtil.createAccessToken(user);
             String refreshToken = jwtUtil.createRefreshToken(user);
-
-            // 로그: JWT 토큰 생성
-            log.info("JWT 토큰 생성: AccessToken - {}, RefreshToken - {}", accessToken, refreshToken);
-
             // Redis 및 쿠키에 토큰 저장
             jwtUtil.addTokenToRedis(accessToken, refreshToken);
             jwtUtil.addTokenToCookie(accessToken, response);
-
             // 성공 응답 전송
             sendResponse(response, HttpStatus.OK, "로그인 성공");
         }else{
