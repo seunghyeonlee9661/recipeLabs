@@ -22,7 +22,7 @@ jobs:
 
       - name: Copy files via SSH
         run: |
-          rsync -avz --exclude '.git/' --chown=leesh:leesh -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.USER }}@${{ secrets.HOST }}:/home/leesh/recipeLabs
+          rsync -avz --delete '.git/' --chown=leesh:leesh -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.USER }}@${{ secrets.HOST }}:/home/leesh/recipeLabs
 
       - name: Create environment variables file
         run: |
