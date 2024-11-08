@@ -3,7 +3,6 @@ package com.example.recipeLabs.service;
 import com.example.recipeLabs.entity.User;
 import com.example.recipeLabs.enums.Provider;
 import com.example.recipeLabs.repository.UserRepository;
-import com.example.recipeLabs.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +40,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         Provider provider = Provider.valueOf(registrationId.toUpperCase());
         String providerId = attributes.get("providerId").toString();
 
+        // 사용자 계정 확인 후 처리
         User user = userRepository.findByProviderAndProviderId(provider, providerId)
                 .orElseGet(() -> {
                     // 새 사용자 생성
@@ -54,6 +54,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     log.info("새 회원 - 회원가입");
                     return userRepository.save(newUser);
                 });
+        //
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("SecurityContextHolder 저장");
@@ -62,9 +63,10 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .getProviderDetails()
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
-        // DB 저장로직이 필요하면 추가
-        return new UserPrincipal(user, oAuth2User.getAttributes(), userNameAttributeName);
+
+        return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName);
     }
+
     /**
      * 각 플랫폼의 키에 맞게 속성 값 추출
      */
