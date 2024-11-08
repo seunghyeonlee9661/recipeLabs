@@ -63,7 +63,7 @@ public class JwtUtil {
         Map<String, Object> additionalClaims = new HashMap<>();
         /* 클레임으로정보 추가 가능*/
         additionalClaims.put("name", user.getName());
-        additionalClaims.put("provider", user.getProviderId());
+        additionalClaims.put("provider",user.getProvider().toString());
         Date date = new Date();
         return BEARER_PREFIX + Jwts.builder()
                         .setSubject(String.valueOf(user.getEmail())) // 사용자 식별자값(ID)
@@ -78,7 +78,7 @@ public class JwtUtil {
     public String createRefreshToken(User user) {
         /* 클레임으로정보 추가 가능*/
         Map<String, Object> additionalClaims = new HashMap<>();
-        additionalClaims.put("provider", user.getProviderId());
+        additionalClaims.put("provider",user.getProvider().toString());
         Date date = new Date();
         return Jwts.builder()
                         .setSubject(String.valueOf(user.getEmail())) // 사용자 식별자값(ID)
@@ -158,7 +158,7 @@ public class JwtUtil {
             Claims claims = getUserInfoFromToken(storedRefreshToken);
             String email = claims.getSubject();
             String provider = claims.get("provider", String.class);
-            // Claims에서 정보를 찾아 토큰에 저장 
+            // Claims에서 정보를 찾아 토큰에 저장
             User user = userRepository.findByEmailAndProvider(email, Provider.valueOf(provider)).orElseThrow(() -> new IllegalArgumentException("User not found for email: " + email));
             long remainingValidity = redisService.getExpiration(RedisService.REFRESH_TOKEN_PREFIX,strippedAccessToken);
             // 기존 refreshToken 삭제
