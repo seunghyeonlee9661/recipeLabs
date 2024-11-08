@@ -1,8 +1,10 @@
 package com.example.recipeLabs.config;
+import com.example.recipeLabs.entity.User;
 import com.example.recipeLabs.filter.JwtAuthenticationFilter;
 import com.example.recipeLabs.filter.JwtAuthorizationFilter;
 import com.example.recipeLabs.filter.RequestLoggingFilter;
 import com.example.recipeLabs.security.JwtUtil;
+import com.example.recipeLabs.security.UserDetailsImpl;
 import com.example.recipeLabs.security.UserDetailsServiceImpl;
 import com.example.recipeLabs.service.OAuth2UserService;
 import com.example.recipeLabs.service.RedisService;
@@ -50,7 +52,7 @@ public class SecurityConfig {
     private final RedisService redisService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final AuthenticationEntryPoint authenticationEntryPoint;
-    private final OAuth2UserService OAuth2UserService;
+    private final OAuth2UserService oAuth2UserService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -113,8 +115,8 @@ public class SecurityConfig {
                 // Oauth2 설정
                 .oauth2Login((oauth2Login) -> oauth2Login
                         .loginPage("/login")
-                        .successHandler(successHandler())
-                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(OAuth2UserService))
+                        .successHandler(oAuth2successHandler())
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(oAuth2UserService))
                 )
                 .addFilterBefore(new RequestLoggingFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class)
@@ -154,13 +156,18 @@ public class SecurityConfig {
 
     // Oauth2 성공 처리
     @Bean
-    public AuthenticationSuccessHandler successHandler() {
+    public AuthenticationSuccessHandler oAuth2successHandler() {
         return ((request, response, authentication) -> {
-            DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
-            // 모든 속성 출력
-            Map<String, Object> attributes = defaultOAuth2User.getAttributes();
-            // JSON으로 출력
-            String body = new ObjectMapper().writeValueAsString(attributes);
+            User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+
+            String accessToken = jwtUtil.createAccessToken(user);
+            String refreshToken = jwtUtil.createRefreshToken(user);
+
+            // Redis 및 쿠키에 토큰 저장
+            jwtUtil.addTokenToRedis(accessToken, refreshToken);
+            jwtUtil.addTokenToCookie(accessToken, response);
+
+            String body = user.getName() + " " + user.getEmail() + " " + user.getProvider().toString();
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             PrintWriter writer = response.getWriter();

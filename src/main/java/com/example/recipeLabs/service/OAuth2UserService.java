@@ -30,7 +30,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         // 사용자 정보
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
 
         // 발급자 확인
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
@@ -54,8 +53,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     log.info("새 회원 - 회원가입");
                     return userRepository.save(newUser);
                 });
-        //
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
+
+        // 사용자 정보 SecurityContextHolder 저장
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("SecurityContextHolder 저장");
 
@@ -64,7 +64,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .getUserInfoEndpoint()
                 .getUserNameAttributeName();
 
-        return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName);
+        return new DefaultOAuth2User(null, oAuth2User.getAttributes(), userNameAttributeName);
     }
 
     /**
