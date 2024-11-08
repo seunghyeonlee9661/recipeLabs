@@ -60,11 +60,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("SecurityContextHolder 저장");
 
-        String userNameAttributeName = userRequest.getClientRegistration()
-                .getProviderDetails()
-                .getUserInfoEndpoint()
-                .getUserNameAttributeName();
-
         return new UserDetailsImpl(user, oAuth2User.getAttributes());
     }
 

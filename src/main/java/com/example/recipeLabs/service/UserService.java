@@ -31,7 +31,7 @@ public class UserService {
     @Transactional
     public ResponseEntity<String> createUser(UserCreateRequestDTO userCreateRequestDTO){
         // 이메일 중복 검사
-        if (userRepository.findByEmail(userCreateRequestDTO.getEmail()).isPresent()) throw new IllegalArgumentException("중복된 Email 입니다.");
+        if (userRepository.findByEmailAndProvider(userCreateRequestDTO.getEmail(),Provider.LOCAL).isPresent()) throw new IllegalArgumentException("중복된 Email 입니다.");
         // 비밀번호 일치 검사
         if (!userCreateRequestDTO.getPassword().equals(userCreateRequestDTO.getPasswordCheck())) throw new IllegalArgumentException("비밀번호 확인이 일치하지 않습니다.");
         // 사용자 메일 인증 코드
@@ -69,7 +69,7 @@ public class UserService {
 
     /* 회원 탈퇴*/
     @Transactional
-    public ResponseEntity<String> removeUser(UserDetailsImpl userDetails, HttpServletResponse res) throws IOException {
+    public ResponseEntity<String> removeUser(UserDetailsImpl userDetails, HttpServletResponse res) {
         User user = userDetails.getUser();
         // 사용자가 기본 계정인 경우
         if(user.getProvider().equals(Provider.LOCAL) && user.getProfileImage() != null){// 사용자가 기본 계정인 경우

@@ -1,6 +1,7 @@
 package com.example.recipeLabs.security;
 
 import com.example.recipeLabs.entity.User;
+import com.example.recipeLabs.enums.Provider;
 import com.example.recipeLabs.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /* 인증 확인 작업 */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
+        User user = userRepository.findByEmailAndProvider(username, Provider.LOCAL).orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
         return new UserDetailsImpl(user);
     }
 }
