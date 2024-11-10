@@ -28,10 +28,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RecipeService {
 
-    private RecipeRepository recipeRepository;
-    private RecipeLikeRepository recipeLikeRepository;
-    private ImageService imageService;
-    private ImageTransformService imageTransformService;
+    private final RecipeRepository recipeRepository;
+    private final RecipeLikeRepository recipeLikeRepository;
+    private final ImageService imageService;
+    private final ImageTransformService imageTransformService;
 
     /* 레시피 작성 */
     @Transactional
