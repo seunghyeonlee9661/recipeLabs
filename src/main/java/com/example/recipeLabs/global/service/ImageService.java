@@ -27,7 +27,7 @@ public class ImageService {
         Files.copy(file.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         // TODO : 반환 URL (Nginx의 서버 도메인과 경로를 맞춰야 함)
-        return String.format("http://weatherwearapi.com/uploads/%s", key);
+        return String.format("http://dltmdgus9661.iptime.org:8087/uploads/%s", key);
     }
 
     /* 서버에 없는 유니크 이름을 생성하는 기능 */
@@ -54,7 +54,7 @@ public class ImageService {
 
     /* URL로부터 파일 이름을 추출하는 기능 */
     private String extractKeyFromUrl(String fileUrl) {
-        String pattern = "http://weatherwearapi.com/uploads/(.*)";
+        String pattern = "http://dltmdgus9661.iptime.org:8087/uploads/(.*)";
         Pattern r = Pattern.compile(pattern);
         Matcher m = r.matcher(fileUrl);
         if (m.find()) {
