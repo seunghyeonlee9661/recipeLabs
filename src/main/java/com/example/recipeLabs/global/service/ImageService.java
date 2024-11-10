@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 @Service
 public class ImageService {
 
-    private static final String UPLOAD_DIR = "/var/www/uploads/recipeLabs";
+    private static final String UPLOAD_DIR = "/var/www/uploads/recipeLabs/";
 
     /* 파일 업로드 */
     public String uploadFile(File file) throws IOException {

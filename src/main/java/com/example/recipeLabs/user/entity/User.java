@@ -43,7 +43,7 @@ public class User {
     private String profileImage;
 
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false) // 수정 불가
     private LocalDateTime createdAt;
 
     // 이메일 인증 여부 필드
