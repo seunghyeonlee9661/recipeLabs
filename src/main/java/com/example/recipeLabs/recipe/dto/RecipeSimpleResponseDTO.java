@@ -14,7 +14,6 @@ public class RecipeSimpleResponseDTO {
     private String image;
     private String ingredients;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private int likes;
 
     public RecipeSimpleResponseDTO(Recipe recipe){
@@ -25,7 +24,6 @@ public class RecipeSimpleResponseDTO {
         this.image = recipe.getImage();
         this.ingredients = recipe.getIngredients();
         this.createdAt = recipe.getCreatedAt();
-        this.updatedAt = recipe.getUpdatedAt();
         this.likes = recipe.getLikes();
     }
 }
