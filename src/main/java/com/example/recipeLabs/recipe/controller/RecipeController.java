@@ -87,6 +87,15 @@ public class RecipeController {
         return recipeService.setLike(recipeId,userDetails);
     }
 
+    /* 레시피 즐겨찾기 설정 */
+    @PutMapping("/{recipeId}/favorite")
+    public ResponseEntity<String> setFavorite(
+            @PathVariable Long recipeId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.setFavorite(recipeId,userDetails);
+    }
+
+
 
     /*_____________________레시피 단계__________________*/
 

@@ -5,8 +5,10 @@ import com.example.recipeLabs.global.service.ImageService;
 import com.example.recipeLabs.global.service.ImageTransformService;
 import com.example.recipeLabs.recipe.dto.*;
 import com.example.recipeLabs.recipe.entity.Recipe;
+import com.example.recipeLabs.recipe.entity.RecipeFavorite;
 import com.example.recipeLabs.recipe.entity.RecipeLike;
 import com.example.recipeLabs.recipe.entity.RecipeStep;
+import com.example.recipeLabs.recipe.repository.RecipeFavoriteRepository;
 import com.example.recipeLabs.recipe.repository.RecipeLikeRepository;
 import com.example.recipeLabs.recipe.repository.RecipeRepository;
 import com.example.recipeLabs.recipe.repository.RecipeStepRepository;
@@ -17,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ public class RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final RecipeLikeRepository recipeLikeRepository;
+    private final RecipeFavoriteRepository recipeFavoriteRepository;
     private final RecipeStepRepository recipeStepRepository;
     private final ImageService imageService;
     private final ImageTransformService imageTransformService;
@@ -59,13 +61,19 @@ public class RecipeService {
     public ResponseEntity<RecipeResponseDTO> findRecipe(Long recipeId, UserDetailsImpl userDetails) {
         // 레시피 정보 가져오기
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
-        // 사용자 정보와 레시피 좋아요 상태 확인
+        // 사용자 레시피 좋아요 상태 확인
         boolean isLiked = Optional.ofNullable(userDetails)
                 .map(UserDetailsImpl::getUser)
                 .map(user -> recipeLikeRepository.existsByUserAndRecipe(user, recipe))
                 .orElse(false);
 
-        return ResponseEntity.ok(new RecipeResponseDTO(recipe, isLiked));
+        // 사용자 레시피 즐겨찾기 상태 확인
+        boolean isFavorite = Optional.ofNullable(userDetails)
+                .map(UserDetailsImpl::getUser)
+                .map(user -> recipeFavoriteRepository.existsByUserAndRecipe(user, recipe))
+                .orElse(false);
+
+        return ResponseEntity.ok(new RecipeResponseDTO(recipe, isLiked,isFavorite));
     }
 
     /* 레시피 수정 - 이미지 */
@@ -127,6 +135,19 @@ public class RecipeService {
                         () -> recipeLikeRepository.save(new RecipeLike(recipe, userDetails.getUser()))  // 좋아요가 없으면 추가
                 );
         return ResponseEntity.status(HttpStatus.CREATED).body("좋아요 설정 변경됨");
+    }
+
+    /* 레시피 즐겨찾기 설정 */
+    @Transactional
+    public ResponseEntity<String> setFavorite(Long recipeId, UserDetailsImpl userDetails){
+        // 레시피 확인
+        Recipe recipe = validateRecipeOwner(recipeId,userDetails);
+        // 현재 레시피에 대한 즐겨찾기 추가 혹은 삭제
+        recipeFavoriteRepository.findByUserAndRecipe(userDetails.getUser(), recipe)
+                .ifPresentOrElse(recipeFavoriteRepository::delete,  // 즐겨찾기가 있으면 삭제
+                        () -> recipeFavoriteRepository.save(new RecipeFavorite(recipe, userDetails.getUser()))  // 즐겨찾기가 없으면 추가
+                );
+        return ResponseEntity.status(HttpStatus.CREATED).body("즐겨찾기 설정 변경됨");
     }
 
     /*_________________레시피 단계 기능___________________________*/

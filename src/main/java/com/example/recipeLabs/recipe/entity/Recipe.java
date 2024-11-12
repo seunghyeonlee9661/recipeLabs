@@ -67,11 +67,6 @@ public class Recipe {
         this.image = image;
     }
 
-    // 좋아요 수
-    public int getLikes(){
-        return this.recipeLikeList.size();
-    }
-
     // 레시피의 작성이 완료되었음을 체크
     public void setIsComplete(boolean isComplete){
         this.isComplete = isComplete;

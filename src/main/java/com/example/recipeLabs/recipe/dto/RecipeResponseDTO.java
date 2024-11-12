@@ -19,8 +19,10 @@ public class RecipeResponseDTO {
     private final List<RecipeStepResponseDTO> recipeStepList;
     private final boolean isLiked;
     private final int likes;
+    private final boolean isFavorite;
+    private final int favorites;
 
-    public RecipeResponseDTO(Recipe recipe,boolean isLiked){
+    public RecipeResponseDTO(Recipe recipe,boolean isLiked,boolean isFavorite){
         this.id = recipe.getId();
         this.user = new UserResponseDTO(recipe.getUser());
         this.title = recipe.getDescription();
@@ -29,7 +31,9 @@ public class RecipeResponseDTO {
         this.ingredients = recipe.getIngredients();
         this.createdAt = recipe.getCreatedAt();
         this.recipeStepList = recipe.getRecipeSteps().stream().map(RecipeStepResponseDTO::new).collect(Collectors.toList());
-        this.likes = recipe.getLikes();
+        this.likes = recipe.getRecipeSteps().size();
         this.isLiked = isLiked;
+        this.isFavorite = isFavorite;
+        this.favorites = recipe.getRecipeFavorites().size();
     }
 }

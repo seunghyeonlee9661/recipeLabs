@@ -22,7 +22,7 @@ public class RecipeFavorite {
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe; // 레시피
 
-    public RecipeFavorite(User user, Recipe recipe) {
+    public RecipeFavorite(Recipe recipe,User user) {
         this.user = user;
         this.recipe = recipe;
     }
