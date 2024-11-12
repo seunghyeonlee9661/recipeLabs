@@ -29,11 +29,22 @@ public class RecipeStep {
     @Column(name = "image", length = 255, nullable = true)
     private String image; // 이미지 URL
 
-    public RecipeStep(RecipeStepCreateRequestDTO requestDTO, Recipe recipe){
+    public RecipeStep(Recipe recipe,int stepOrder){
         this.recipe = recipe;
-        this.stepOrder = requestDTO.getStepOrder();
+        this.stepOrder = stepOrder;
+    }
+
+    public void updateContent(RecipeStepCreateRequestDTO requestDTO){
         this.content = requestDTO.getContent();
         this.cookingTime = requestDTO.getCookingTime();
-        this.image = requestDTO.getImage();
+    }
+
+    public void updateImage(String image){
+        this.image = image;
+    }
+
+    public void setStepOrder(int stepOrder){
+        this.stepOrder = stepOrder;
+
     }
 }

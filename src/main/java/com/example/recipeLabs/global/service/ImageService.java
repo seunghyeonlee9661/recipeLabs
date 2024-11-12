@@ -25,7 +25,6 @@ public class ImageService {
         File destinationFile = new File(UPLOAD_DIR + key);
 
         Files.copy(file.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
         // TODO : 반환 URL (Nginx의 서버 도메인과 경로를 맞춰야 함)
         return String.format("http://dltmdgus9661.iptime.org/uploads/recipeLabs/%s", key);
     }

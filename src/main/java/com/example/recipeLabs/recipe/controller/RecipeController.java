@@ -3,6 +3,7 @@ package com.example.recipeLabs.recipe.controller;
 import com.example.recipeLabs.global.security.UserDetailsImpl;
 import com.example.recipeLabs.recipe.dto.RecipeResponseDTO;
 import com.example.recipeLabs.recipe.dto.RecipeSimpleResponseDTO;
+import com.example.recipeLabs.recipe.dto.RecipeStepCreateRequestDTO;
 import com.example.recipeLabs.recipe.dto.RecipeUpdateRequestDTO;
 import com.example.recipeLabs.recipe.service.RecipeService;
 import com.example.recipeLabs.user.dto.UserResponseDTO;
@@ -37,41 +38,81 @@ public class RecipeController {
     }
 
     /* 레시피 정보 요청 */
-    @GetMapping("/{id}")
+    @GetMapping("/{recipeId}")
     public ResponseEntity<RecipeResponseDTO> findRecipeDetail(
-            @PathVariable Long id,
+            @PathVariable Long recipeId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return recipeService.findRecipe(id,userDetails);
+        return recipeService.findRecipe(recipeId,userDetails);
     }
 
     /* 레시피 사진 업데이트 */
-    @PutMapping("/{id}/image")
+    @PutMapping("/{recipeId}/image")
     public ResponseEntity<String> updateRecipeImage(
-            @PathVariable Long id,
+            @PathVariable Long recipeId,
             @RequestPart(value = "images", required = true) MultipartFile image,
             @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        return recipeService.updateRecipeImage(id,image,userDetails);
+        return recipeService.updateRecipeImage(recipeId,image,userDetails);
     }
 
     /* 레시피 내용 업데이트 */
-    @PutMapping("/{id}/content")
+    @PutMapping("/{recipeId}/content")
     public ResponseEntity<String> updateRecipeContent(
-            @PathVariable Long id,
+            @PathVariable Long recipeId,
             @RequestBody RecipeUpdateRequestDTO recipeUpdateRequestDTO,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return recipeService.updateRecipeContent(id, recipeUpdateRequestDTO, userDetails);
+        return recipeService.updateRecipeContent(recipeId, recipeUpdateRequestDTO, userDetails);
     }
 
     /* 레시피 삭제 */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{recipeId}")
     public ResponseEntity<String> deleteRecipe(
-            @PathVariable Long id,
+            @PathVariable Long recipeId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return recipeService.deleteRecipe(id,userDetails);
+        return recipeService.deleteRecipe(recipeId,userDetails);
     }
 
-    /*__________________________________________*/
+    /*_____________________레시피 단계__________________*/
+    /* 레시피 단계 추가*/
+    @PostMapping("/{recipeId}/step")
+    public ResponseEntity<String> createRecipeStep(
+            @PathVariable Long recipeId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.createRecipeStep(recipeId, userDetails);
+    }
 
+    /* 레시피 단계 내용 수정*/
+    @PutMapping("/step/{recipeStepId}/content")
+    public ResponseEntity<String> createRecipeStep(
+            @PathVariable Long recipeStepId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody RecipeStepCreateRequestDTO recipeStepCreateRequestDTO){
+        return recipeService.updateRecipeStepContent(recipeStepId,recipeStepCreateRequestDTO,userDetails);
+    }
 
+    /* 레시피 단계 이미지 수정*/
+    @PutMapping("/step/{recipeStepId}/image")
+    public ResponseEntity<String> createRecipeStep(
+            @PathVariable Long recipeStepId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestPart(value = "images", required = true) MultipartFile image) throws IOException {
+        return recipeService.updateRecipeStepImage(recipeStepId, image, userDetails);
+    }
 
+    /* 레시피 단계 삭제 */
+    @DeleteMapping("/step/{recipeStepId}")
+    public ResponseEntity<String> deleteRecipeStep(
+            @PathVariable Long recipeStepId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        return recipeService.deleteRecipeStep(recipeStepId, userDetails);
+    }
+
+    /* 레시피 단계 순서 변경 */
+    @PutMapping("/{recipeId}/steps/{currentOrder}/order")
+    public ResponseEntity<String> updateRecipeStepOrder(
+            @PathVariable Long recipeId,
+            @PathVariable int currentOrder,
+            @RequestParam int newOrder,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return recipeService.updateRecipeStepOrder(recipeId, currentOrder, newOrder,userDetails);
+    }
 }

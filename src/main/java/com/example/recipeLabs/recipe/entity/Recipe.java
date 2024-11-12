@@ -44,7 +44,7 @@ public class Recipe {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<RecipeStep> recipesSteps;
+    private List<RecipeStep> recipeSteps;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<RecipeLike> recipeLikeList;
@@ -55,14 +55,6 @@ public class Recipe {
     public Recipe(User user){
         this.user = user;
     }
-
-//    public Recipe(RecipeCreateRequestDTO requestDTO, User user){
-//        this.user = user;
-//        this.title = requestDTO.getTitle();
-//        this.description = requestDTO.getDescription();
-//        this.image = requestDTO.getImage();
-//        this.ingredients = requestDTO.getIngredients();
-//    }
 
     public void updateContent(RecipeUpdateRequestDTO requestDTO){
         this.title = requestDTO.getTitle();
@@ -82,5 +74,20 @@ public class Recipe {
     // 레시피의 작성이 완료되었음을 체크
     public void setIsComplete(boolean isComplete){
         this.isComplete = isComplete;
+    }
+
+    // 레시피 단계 순서 변경 로직
+    public void updateStepOrder(int currentOrder, int newOrder) {
+        if (currentOrder < newOrder) {
+            // 현재 순서가 새 순서보다 앞에 있으면, 중간 단계들 -1
+            recipeSteps.stream()
+                    .filter(step -> step.getStepOrder() > currentOrder && step.getStepOrder() <= newOrder)
+                    .forEach(step -> step.setStepOrder(step.getStepOrder() - 1));
+        } else {
+            // 현재 순서가 새 순서보다 뒤에 있으면, 중간 단계들 +1
+            recipeSteps.stream()
+                    .filter(step -> step.getStepOrder() < currentOrder && step.getStepOrder() >= newOrder)
+                    .forEach(step -> step.setStepOrder(step.getStepOrder() + 1));
+        }
     }
 }
