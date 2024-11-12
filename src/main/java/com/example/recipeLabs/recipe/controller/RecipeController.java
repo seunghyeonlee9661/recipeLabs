@@ -49,7 +49,7 @@ public class RecipeController {
     @PutMapping("/{recipeId}/image")
     public ResponseEntity<String> updateRecipeImage(
             @PathVariable Long recipeId,
-            @RequestPart(value = "images", required = true) MultipartFile image,
+            @RequestPart(value = "image", required = true) MultipartFile image,
             @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return recipeService.updateRecipeImage(recipeId,image,userDetails);
     }
@@ -94,7 +94,7 @@ public class RecipeController {
     public ResponseEntity<String> createRecipeStep(
             @PathVariable Long recipeStepId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestPart(value = "images", required = true) MultipartFile image) throws IOException {
+            @RequestPart(value = "image", required = true) MultipartFile image) throws IOException {
         return recipeService.updateRecipeStepImage(recipeStepId, image, userDetails);
     }
 
