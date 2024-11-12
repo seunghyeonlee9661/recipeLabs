@@ -175,12 +175,11 @@ public class RecipeService {
         // 레시피 확인
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
         // 레시피 작성자 확인
-        if (recipe.getUser().getId().equals(userDetails.getUser().getId())) return ResponseEntity.badRequest().body("작성자가 아니면 편집할 수 없습니다.");
+        if (!recipe.getUser().getId().equals(userDetails.getUser().getId())) return ResponseEntity.badRequest().body("작성자가 아니면 편집할 수 없습니다.");
         // 레시피 단계 확인
         RecipeStep recipeStep = recipeStepRepository.findByRecipeAndStepOrder(recipe,currentOrder).orElseThrow(() -> new IllegalArgumentException("레시피 단계를 찾을 수 없습니다."));
         // 레시피 단계 데이터
         List<RecipeStep> steps = recipe.getRecipeSteps();
-
         // 유효한 순서인지 확인
         if (currentOrder < 0 || newOrder < 0 || currentOrder >= steps.size() || newOrder >= steps.size()) {
             return ResponseEntity.badRequest().body("유효하지 않은 순서입니다.");
