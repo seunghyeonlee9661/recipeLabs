@@ -84,11 +84,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-//                                .requestMatchers("/error").permitAll() // 오류
-//                                .requestMatchers("/login").permitAll() // 로그인
-//                                .requestMatchers("/swagger-ui/**").permitAll() //Swagger
-//                                .requestMatchers("/v3/api-docs/**").permitAll() //Swagger
-//                                .anyRequest().authenticated()
+                                /* TODO : 이후에 로그인이 필요한 엔드포인트 추가 필요! */
                                 .anyRequest().permitAll() // 모든 요청 허용
                 )
                 // 에러 핸들러 설정
@@ -98,6 +94,7 @@ public class SecurityConfig {
                         formLogin
                                 .loginPage("/users/login") // 명시적으로 로그인 페이지 경로를 설정
                                 .loginProcessingUrl("/users/login") // 로그인 처리를 /users/login에서 수행
+
                                 .permitAll()
                 )
                 // 로그아웃 처리 설정

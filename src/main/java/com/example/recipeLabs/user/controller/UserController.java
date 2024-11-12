@@ -11,11 +11,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +33,30 @@ import java.io.IOException;
 public class UserController {
 
     private final UserService userService;
+
+    @PostMapping("/login")
+    @Operation(summary = "로그인", description = "사용자 로그인 요청, 로그인 후 JWT 토큰을 쿠키에 저장")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그인 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "401", description = "인증 실패")
+    })
+    public ResponseEntity<String> login(@RequestBody UserLoginRequestDTO request) {
+        // 실제 로그인 처리는 시큐리티 필터에서 처리
+        return ResponseEntity.ok("로그인 요청이 성공적으로 처리되었습니다.");
+    }
+
+    @PostMapping("/logout")
+    @Operation(summary = "로그아웃", description = "사용자 로그아웃 요청, JWT 토큰을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "401", description = "인증 실패")
+    })
+    public ResponseEntity<String> logout() {
+        // 실제 로그아웃 처리는 시큐리티에서 진행
+        return ResponseEntity.ok("로그아웃 요청이 성공적으로 처리되었습니다.");
+    }
 
     /* 사용자 회원가입 - 이메일 발송 */
     @PostMapping("")

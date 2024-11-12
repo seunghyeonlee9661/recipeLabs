@@ -5,11 +5,8 @@ import com.example.recipeLabs.global.service.RedisService;
 import com.example.recipeLabs.recipe.dto.RecipeSimpleResponseDTO;
 import com.example.recipeLabs.recipe.entity.RecipeFavorite;
 import com.example.recipeLabs.recipe.repository.RecipeFavoriteRepository;
-import com.example.recipeLabs.user.dto.UserCreateRequestDTO;
+import com.example.recipeLabs.user.dto.*;
 import com.example.recipeLabs.recipe.entity.Recipe;
-import com.example.recipeLabs.user.dto.UserPasswordResetRequestDTO;
-import com.example.recipeLabs.user.dto.UserPasswordUpdateRequestDTO;
-import com.example.recipeLabs.user.dto.UserUpdateRequestDTO;
 import com.example.recipeLabs.user.entity.User;
 import com.example.recipeLabs.global.enums.Provider;
 import com.example.recipeLabs.recipe.repository.RecipeRepository;
@@ -26,9 +23,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -48,6 +49,7 @@ public class UserService {
     private final ImageTransformService imageTransformService;
     private final RedisService redisService;
     private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
     /* 회원가입 - 메일 전송 */
     @Transactional

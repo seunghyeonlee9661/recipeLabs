@@ -61,7 +61,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<RecipeResponseDTO> findRecipeDetail(
-            @PathVariable @Parameter(description = "변경할 레시피의 ID") Long recipeId,
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.findRecipe(recipeId,userDetails);
     }
@@ -75,7 +75,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> updateRecipeImage(
-            @PathVariable @Parameter(description = "변경할 레시피의 ID") Long recipeId,
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @RequestPart(value = "image", required = true) @Parameter(description = "레시피 단계 이미지 파일 (필수 항목)") MultipartFile image,
             @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return recipeService.updateRecipeImage(recipeId,image,userDetails);
@@ -90,7 +90,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> updateRecipeContent(
-            @PathVariable @Parameter(description = "변경할 레시피의 ID") Long recipeId,
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @RequestBody RecipeUpdateRequestDTO recipeUpdateRequestDTO,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.updateRecipeContent(recipeId, recipeUpdateRequestDTO, userDetails);
@@ -105,7 +105,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> deleteRecipe(
-            @PathVariable @Parameter(description = "변경할 레시피의 ID") Long recipeId,
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.deleteRecipe(recipeId,userDetails);
     }
@@ -119,7 +119,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> completeRecipe(
-            @PathVariable @Parameter(description = "변경할 레시피의 ID") Long recipeId,
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.completeRecipe(recipeId,userDetails);
     }
@@ -133,7 +133,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> setLike(
-            @PathVariable @Parameter(description = "변경할 레시피의 ID") Long recipeId,
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.setLike(recipeId,userDetails);
     }
@@ -147,7 +147,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> setFavorite(
-            @PathVariable @Parameter(description = "변경할 레시피의 ID") Long recipeId,
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.setFavorite(recipeId,userDetails);
     }
@@ -163,7 +163,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> createRecipeStep(
-            @PathVariable @Parameter(description = "변경할 레시피의 ID") Long recipeId,
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.createRecipeStep(recipeId, userDetails);
     }
@@ -177,7 +177,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피 단계를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> createRecipeStep(
-            @PathVariable @Parameter(description = "변경할 레시피의 단계 ID") Long recipeStepId,
+            @PathVariable @Parameter(description = "레시피의 단계 ID") Long recipeStepId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestBody RecipeStepCreateRequestDTO recipeStepCreateRequestDTO){
         return recipeService.updateRecipeStepContent(recipeStepId,recipeStepCreateRequestDTO,userDetails);
@@ -192,7 +192,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피 단계를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> createRecipeStep(
-            @PathVariable @Parameter(description = "변경할 레시피의 단계 ID") Long recipeStepId,
+            @PathVariable @Parameter(description = "레시피의 단계 ID") Long recipeStepId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestPart(value = "image", required = true) MultipartFile image) throws IOException {
         return recipeService.updateRecipeStepImage(recipeStepId, image, userDetails);
@@ -207,7 +207,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피 단계를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> deleteRecipeStep(
-            @PathVariable @Parameter(description = "변경할 레시피의 단계 ID") Long recipeStepId,
+            @PathVariable @Parameter(description = "레시피의 단계 ID") Long recipeStepId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return recipeService.deleteRecipeStep(recipeStepId, userDetails);
     }
@@ -221,7 +221,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피 또는 레시피 단계가 존재하지 않음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> updateRecipeStepOrder(
-            @PathVariable @Parameter(description = "변경할 레시피의 ID") Long recipeId,
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @PathVariable @Parameter(description = "현재 레시피 단계의 순서 (변경 전)") int currentOrder,
             @RequestParam @Parameter(description = "새로운 순서 값") int newOrder,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
