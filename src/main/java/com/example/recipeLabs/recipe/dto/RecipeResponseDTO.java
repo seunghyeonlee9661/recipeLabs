@@ -28,7 +28,7 @@ public class RecipeResponseDTO {
         this.image = recipe.getImage();
         this.ingredients = recipe.getIngredients();
         this.createdAt = recipe.getCreatedAt();
-        this.recipeStepList = recipe.getRecipesSteps().stream().map(RecipeStepResponseDTO::new).collect(Collectors.toList());
+        this.recipeStepList = recipe.getRecipeSteps().stream().map(RecipeStepResponseDTO::new).collect(Collectors.toList());
         this.likes = recipe.getLikes();
         this.isLiked = isLiked;
     }

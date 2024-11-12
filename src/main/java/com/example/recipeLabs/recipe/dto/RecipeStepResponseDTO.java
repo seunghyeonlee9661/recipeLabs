@@ -1,6 +1,8 @@
 package com.example.recipeLabs.recipe.dto;
 import com.example.recipeLabs.recipe.entity.RecipeStep;
+import lombok.Getter;
 
+@Getter
 public class RecipeStepResponseDTO {
     private Long id;
     private Integer stepOrder; // 단계 순서
