@@ -1,23 +1,43 @@
 package com.example.recipeLabs.recipe.dto;
 
 import com.example.recipeLabs.recipe.entity.Recipe;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 public class RecipeSimpleResponseDTO {
+
+    @Schema(description = "레시피 ID", example = "1")
     private Long id;
+
+    @Schema(description = "레시피 작성자 이름", example = "홍길동")
     private String user_name;
+
+    @Schema(description = "레시피 제목", example = "맛있는 김치찌개")
     private String title;
+
+    @Schema(description = "레시피 설명", example = "이 레시피는 한국 전통 김치찌개 만드는 방법입니다.")
     private String description;
+
+    @Schema(description = "레시피 이미지 URL", example = "http://example.com/recipe-image.jpg")
     private String image;
+
+    @Schema(description = "레시피 재료 (JSON 형식의 문자열)", example = "{\"돼지고기\":\"100g\",\"양파\":\"1개\"}")
     private String ingredients;
+
+    @Schema(description = "레시피 작성 날짜", example = "2024-11-12T10:00:00")
     private LocalDateTime createdAt;
+
+    @Schema(description = "레시피 좋아요 수", example = "100")
     private int likes;
+
+    @Schema(description = "레시피 즐겨찾기 수", example = "50")
     private int favorites;
 
-    public RecipeSimpleResponseDTO(Recipe recipe){
+    public RecipeSimpleResponseDTO(Recipe recipe) {
         this.id = recipe.getId();
         this.user_name = recipe.getUser().getName();
         this.title = recipe.getDescription();

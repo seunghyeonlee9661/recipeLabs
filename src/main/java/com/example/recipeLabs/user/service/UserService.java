@@ -3,6 +3,8 @@ package com.example.recipeLabs.user.service;
 import com.example.recipeLabs.global.service.ImageTransformService;
 import com.example.recipeLabs.global.service.RedisService;
 import com.example.recipeLabs.recipe.dto.RecipeSimpleResponseDTO;
+import com.example.recipeLabs.recipe.entity.RecipeFavorite;
+import com.example.recipeLabs.recipe.repository.RecipeFavoriteRepository;
 import com.example.recipeLabs.user.dto.UserCreateRequestDTO;
 import com.example.recipeLabs.recipe.entity.Recipe;
 import com.example.recipeLabs.user.dto.UserPasswordResetRequestDTO;
@@ -39,6 +41,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
+    private final RecipeFavoriteRepository recipeFavoriteRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final ImageService imageService;
@@ -98,14 +101,7 @@ public class UserService {
         userRepository.delete(user);
         // 쿠키 삭제
         jwtUtil.removeJwtCookie(res);
-        return ResponseEntity.ok().body("User deleted successfully");
-    }
-
-    /* 사용자의 게시물 검색 기능 */
-    public ResponseEntity<Page<RecipeSimpleResponseDTO>> findUserRecipes(UserDetailsImpl userDetails, int page){
-        Pageable pageable = PageRequest.of(page, 8, Sort.by(Sort.Order.desc("id")));
-        Page<Recipe> recipePage  = recipeRepository.findByUserId(userDetails.getUser().getId(),pageable);
-        return ResponseEntity.ok(recipePage.map(RecipeSimpleResponseDTO::new));
+        return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다.");
     }
 
     /* 회원 정보 수정*/
@@ -173,11 +169,8 @@ public class UserService {
     public ResponseEntity<String> resetUserPassword(UserPasswordResetRequestDTO requestDTO){
         // redis에서 리셋 코드로 사용자 이메일 확인
         String email = redisService.get(RedisService.RESET_CODE_PREFIX,requestDTO.getResetCode());
-        
         // 리셋 코드가 만료 or 올바르지 않은 경우
-        if (email == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않거나 만료된 코드입니다.");
-        }
+        if (email == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효하지 않거나 만료된 코드입니다.");
         // 사용자 정보 확인
         User user = userRepository.findByEmailAndProvider(email, Provider.LOCAL).orElseThrow(() -> new IllegalArgumentException("이메일에 해당하는 LOCAL 계정 사용자가 존재하지 않습니다."));
         // 새 비밀번호 일치 확인
@@ -186,5 +179,23 @@ public class UserService {
         user.updatePassword(passwordEncoder.encode(requestDTO.getNewPassword()));
         userRepository.save(user);
         return ResponseEntity.ok().body("사용자 비밀번호가 변경되었습니다.");
+    }
+
+    /*______________________________사용자 관련 정보 요청_________________________________ */
+
+    /* 사용자의 게시물 검색 기능 */
+    public ResponseEntity<Page<RecipeSimpleResponseDTO>> findUserRecipes(UserDetailsImpl userDetails, int page){
+        Pageable pageable = PageRequest.of(page, 8, Sort.by(Sort.Order.desc("id")));
+        Page<Recipe> recipePage  = recipeRepository.findByUser(userDetails.getUser(),pageable);
+        return ResponseEntity.ok(recipePage.map(RecipeSimpleResponseDTO::new));
+    }
+
+    /* 사용자 즐겨찾기한 게시물 검색 기능 */
+    public ResponseEntity<Page<RecipeSimpleResponseDTO>> findUserFavorites(UserDetailsImpl userDetails, int page){
+        Pageable pageable = PageRequest.of(page, 8, Sort.by(Sort.Order.desc("id")));
+        Page<RecipeFavorite> recipeFavoritePage   = recipeFavoriteRepository.findByUser(userDetails.getUser(),pageable);
+        // 각 즐겨찾기로 부터 레시피 정보를 가져와 DTO로 변환
+        Page<RecipeSimpleResponseDTO> recipePage = recipeFavoritePage.map(recipeFavorite -> new RecipeSimpleResponseDTO(recipeFavorite.getRecipe()));
+        return ResponseEntity.ok(recipePage);
     }
 }
