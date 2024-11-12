@@ -113,6 +113,7 @@ public class UserService {
     public ResponseEntity<String> updateUserInfo(UserUpdateRequestDTO requestDTO, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         user.updateInfo(requestDTO);
+        userRepository.save(user);
         return ResponseEntity.ok().body("사용자 정보가 변경되었습니다.");
     }
 

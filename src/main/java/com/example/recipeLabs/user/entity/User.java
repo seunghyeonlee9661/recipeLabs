@@ -93,12 +93,10 @@ public class User {
         this.name = requestDTO.getName();
     }
 
-    // FIXME : 이후에 사용자 정보 업데이트에 따라 추가로 변경 추가 가능!
     public void updateImage(String image){
         this.profileImage = image;
     }
 
-    // FIXME : 이후에 사용자 정보 업데이트에 따라 추가로 변경 추가 가능!
     public void updatePassword(String password){
         this.password = password;
     }
