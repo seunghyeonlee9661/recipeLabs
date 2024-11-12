@@ -1,5 +1,7 @@
 package com.example.recipeLabs.global.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -15,7 +17,7 @@ import java.util.regex.Pattern;
 */
 @Service
 public class ImageService {
-
+    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
     private static final String UPLOAD_DIR = "/var/www/uploads/recipeLabs/";
 
     /* 파일 업로드 */
@@ -41,13 +43,15 @@ public class ImageService {
     }
 
     /* 파일 삭제 기능 */
+    // FIXME : 이미지가 존재하지 않을 경우 삭제 과정을 진행하지 않습니다. 추후 버그 발생 가능성이 있음!
     public void deleteFileByUrl(String fileUrl) {
         String key = extractKeyFromUrl(fileUrl);
         File file = new File(UPLOAD_DIR + key);
         if (file.exists()) {
             file.delete();
+            logger.info("File deleted successfully: {}", fileUrl);
         } else {
-            throw new IllegalArgumentException("File not found: " + fileUrl);
+            logger.warn("File not found, skipping deletion: {}", fileUrl);
         }
     }
 

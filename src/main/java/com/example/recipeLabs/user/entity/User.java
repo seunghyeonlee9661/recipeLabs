@@ -5,6 +5,7 @@ import com.example.recipeLabs.recipe.entity.RecipeFavorite;
 import com.example.recipeLabs.recipe.entity.RecipeLike;
 import com.example.recipeLabs.Refrigerator.entity.RefrigeratorItem;
 import com.example.recipeLabs.global.enums.Provider;
+import com.example.recipeLabs.user.dto.UserUpdateRequestDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -85,6 +86,21 @@ public class User {
         this.profileImage = profileImage;
         this.emailVerified = true;
         this.emailVerificationCode = "";
+    }
+
+    // FIXME : 이후에 사용자 정보 업데이트에 따라 추가로 변경 추가 가능!
+    public void updateInfo(UserUpdateRequestDTO requestDTO){
+        this.name = requestDTO.getName();
+    }
+
+    // FIXME : 이후에 사용자 정보 업데이트에 따라 추가로 변경 추가 가능!
+    public void updateImage(String image){
+        this.profileImage = image;
+    }
+
+    // FIXME : 이후에 사용자 정보 업데이트에 따라 추가로 변경 추가 가능!
+    public void updatePassword(String password){
+        this.password = password;
     }
 
     // 사용자 메일 인증
