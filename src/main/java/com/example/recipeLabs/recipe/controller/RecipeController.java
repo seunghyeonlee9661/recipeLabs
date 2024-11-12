@@ -71,6 +71,15 @@ public class RecipeController {
         return recipeService.deleteRecipe(recipeId,userDetails);
     }
 
+    /* 레시피 작성 완료 */
+    @PutMapping("/{recipeId}")
+    public ResponseEntity<String> completeRecipe(
+            @PathVariable Long recipeId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.completeRecipe(recipeId,userDetails);
+    }
+
+
     /*_____________________레시피 단계__________________*/
     /* 레시피 단계 추가*/
     @PostMapping("/{recipeId}/step")
