@@ -129,6 +129,7 @@ public class UserService {
         String imageUrl = imageService.uploadFile(webPFile);
         //변경 내용 적용
         user.updateImage(imageUrl);
+        userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("사용자 이미지가 변경되었습니다.");
     }
 
@@ -144,6 +145,7 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("현재 비밀번호가 올바르지 않습니다.");
         // 비밀번호 변경
         user.updatePassword(passwordEncoder.encode(requestDTO.getNewPassword()));
+        userRepository.save(user);
         return ResponseEntity.ok().body("사용자 비밀번호가 변경되었습니다.");
     }
 
@@ -182,6 +184,7 @@ public class UserService {
         if(!requestDTO.getNewPassword().equals(requestDTO.getNewPasswordCheck())) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("새 비밀번호 확인이 일치하지 않습니다.");
         // 비밀번호 수정
         user.updatePassword(passwordEncoder.encode(requestDTO.getNewPassword()));
+        userRepository.save(user);
         return ResponseEntity.ok().body("사용자 비밀번호가 변경되었습니다.");
     }
 }

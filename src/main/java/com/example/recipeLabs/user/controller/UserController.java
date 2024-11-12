@@ -80,7 +80,7 @@ public class UserController {
     }
 
     /* 사용자 비밀번호 초기화 - 승인 */
-    @GetMapping("/reset")
+    @PutMapping("/reset")
     public ResponseEntity<String>  resetUserPassword(
             @Valid @RequestBody UserPasswordResetRequestDTO requestDTO) {
         return userService.resetUserPassword(requestDTO);
