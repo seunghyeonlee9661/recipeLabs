@@ -21,7 +21,7 @@ public class RecipeLike {
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe; // 레시피
 
-    public RecipeLike(User user, Recipe recipe) {
+    public RecipeLike(Recipe recipe, User user) {
         this.user = user;
         this.recipe = recipe;
     }

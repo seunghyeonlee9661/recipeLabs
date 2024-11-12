@@ -79,8 +79,17 @@ public class RecipeController {
         return recipeService.completeRecipe(recipeId,userDetails);
     }
 
+    /* 레시피 좋아요 설정 */
+    @PutMapping("/{recipeId}/like")
+    public ResponseEntity<String> setLike(
+            @PathVariable Long recipeId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.setLike(recipeId,userDetails);
+    }
+
 
     /*_____________________레시피 단계__________________*/
+
     /* 레시피 단계 추가*/
     @PostMapping("/{recipeId}/step")
     public ResponseEntity<String> createRecipeStep(

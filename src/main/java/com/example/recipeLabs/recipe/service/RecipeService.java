@@ -5,6 +5,7 @@ import com.example.recipeLabs.global.service.ImageService;
 import com.example.recipeLabs.global.service.ImageTransformService;
 import com.example.recipeLabs.recipe.dto.*;
 import com.example.recipeLabs.recipe.entity.Recipe;
+import com.example.recipeLabs.recipe.entity.RecipeLike;
 import com.example.recipeLabs.recipe.entity.RecipeStep;
 import com.example.recipeLabs.recipe.repository.RecipeLikeRepository;
 import com.example.recipeLabs.recipe.repository.RecipeRepository;
@@ -113,6 +114,19 @@ public class RecipeService {
         // 업데이트
         recipe.setIsComplete(true);
         return ResponseEntity.status(HttpStatus.CREATED).body(recipe.getId().toString());
+    }
+
+    /* 레시피 좋아요 설정 */
+    @Transactional
+    public ResponseEntity<String> setLike(Long recipeId, UserDetailsImpl userDetails){
+        // 레시피 확인
+        Recipe recipe = validateRecipeOwner(recipeId,userDetails);
+        // 현재 레시피에 대한 좋아요 추가 혹은 삭제
+        recipeLikeRepository.findByUserAndRecipe(userDetails.getUser(), recipe)
+                .ifPresentOrElse(recipeLikeRepository::delete,  // 좋아요가 있으면 삭제
+                        () -> recipeLikeRepository.save(new RecipeLike(recipe, userDetails.getUser()))  // 좋아요가 없으면 추가
+                );
+        return ResponseEntity.status(HttpStatus.CREATED).body("좋아요 설정 변경됨");
     }
 
     /*_________________레시피 단계 기능___________________________*/
