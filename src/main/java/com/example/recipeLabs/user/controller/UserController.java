@@ -86,10 +86,13 @@ public class UserController {
         return userService.resetUserPassword(requestDTO);
     }
 
+    /*______________________________-사용자 관련 정보 요청_________________________________ */
+
     /* 사용자 레시피 정보 요청 */
-    @GetMapping("users/recipes")
-    public ResponseEntity<Page<RecipeSimpleResponseDTO>> findUsersRecipes(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                          @RequestParam(value= "page", required = false, defaultValue="0") int page){
+    @GetMapping("/recipes")
+    public ResponseEntity<Page<RecipeSimpleResponseDTO>> findUsersRecipes(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(value= "page", required = false, defaultValue="0") int page){
         return userService.findUserRecipes(userDetails,page);
     }
 }
