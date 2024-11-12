@@ -44,6 +44,7 @@ public class Recipe {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @OrderBy("stepOrder ASC") // stepOrder 기준으로 오름차순 정렬
     private List<RecipeStep> recipeSteps;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
