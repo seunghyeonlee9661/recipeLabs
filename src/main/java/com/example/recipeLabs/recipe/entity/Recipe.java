@@ -48,7 +48,7 @@ public class Recipe {
     private List<RecipeStep> recipeSteps;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<RecipeLike> recipeLikeList;
+    private List<RecipeLike> recipeLikes;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<RecipeFavorite> recipeFavorites;

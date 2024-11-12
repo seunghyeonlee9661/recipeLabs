@@ -31,7 +31,7 @@ public class RecipeResponseDTO {
         this.ingredients = recipe.getIngredients();
         this.createdAt = recipe.getCreatedAt();
         this.recipeStepList = recipe.getRecipeSteps().stream().map(RecipeStepResponseDTO::new).collect(Collectors.toList());
-        this.likes = recipe.getRecipeSteps().size();
+        this.likes = recipe.getRecipeLikes().size();
         this.isLiked = isLiked;
         this.isFavorite = isFavorite;
         this.favorites = recipe.getRecipeFavorites().size();
