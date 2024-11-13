@@ -1,5 +1,5 @@
 package com.example.recipeLabs.user.entity;
-import com.example.recipeLabs.fridge.entity.FridgeItem;
+//import com.example.recipeLabs.fridge.entity.FridgeItem;
 import com.example.recipeLabs.user.dto.UserCreateRequestDTO;
 import com.example.recipeLabs.recipe.entity.Recipe;
 import com.example.recipeLabs.recipe.entity.RecipeFavorite;
@@ -63,9 +63,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<RecipeFavorite> recipeFavorites;
-
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<FridgeItem> refrigeratorItemList;
+//
+//    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
+//    private List<FridgeItem> refrigeratorItemList;
 
     // 기본 회원가입
     public User(UserCreateRequestDTO requetDTO,String password, String code){

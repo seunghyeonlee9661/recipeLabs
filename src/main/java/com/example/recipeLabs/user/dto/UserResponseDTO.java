@@ -38,5 +38,6 @@ public class UserResponseDTO {
         this.providerId = user.getProviderId();
         this.name = user.getName();
         this.profileImage = user.getProfileImage();
+        this.createdAt = user.getCreatedAt();
     }
 }
