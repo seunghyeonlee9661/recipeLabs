@@ -4,14 +4,15 @@ import com.example.recipeLabs.global.enums.Category;
 import com.example.recipeLabs.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Getter
 @Entity
 @Table(name = "fridge_items")
+@NoArgsConstructor
 public class FridgeItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
