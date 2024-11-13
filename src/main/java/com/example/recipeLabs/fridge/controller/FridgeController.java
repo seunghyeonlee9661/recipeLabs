@@ -12,10 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
 @RestController
 @Tag(name = "냉장고 API", description = "냉장고 관련 API")
 @RequestMapping("/fridge")
+@RequiredArgsConstructor
 public class FridgeController {
     private final FridgeService fridgeService;
 
