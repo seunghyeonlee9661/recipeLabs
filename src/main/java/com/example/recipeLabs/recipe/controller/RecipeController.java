@@ -6,7 +6,6 @@ import com.example.recipeLabs.recipe.dto.RecipeSimpleResponseDTO;
 import com.example.recipeLabs.recipe.dto.RecipeStepCreateRequestDTO;
 import com.example.recipeLabs.recipe.dto.RecipeUpdateRequestDTO;
 import com.example.recipeLabs.recipe.service.RecipeService;
-import com.example.recipeLabs.user.dto.UserResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,7 +35,8 @@ public class RecipeController {
             @ApiResponse(responseCode = "201", description = "레시피 작성 성공, 생성된 레시피 ID 반환", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<String> createRecipe(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<String> createRecipe(
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.createRecipe(userDetails);
     }
 
@@ -52,6 +52,7 @@ public class RecipeController {
         return recipeService.findRecipePage(page);
     }
 
+    /* TODO : 레시피 검색에 대한 기능 구현 */
     /* 레시피 정보 요청 */
     @GetMapping("/{recipeId}")
     @Operation(summary = "레시피 정보 요청", description = "레시피 ID로 해당 레시피의 상세 정보를 요청합니다. 또한, 사용자의 좋아요 및 즐겨찾기 상태도 포함됩니다.")
