@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "recipes_steps")
+@Table(name = "recipe_step")
 @NoArgsConstructor
 public class RecipeStep {
     @Id

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "recipes_likes")
+@Table(name = "recipe_like")
 @NoArgsConstructor // 기본 생성자 추가
 public class RecipeLike {
     @Id

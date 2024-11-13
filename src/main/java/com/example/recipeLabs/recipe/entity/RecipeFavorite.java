@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "recipes_favorites")
+@Table(name = "recipe_favorite")
 @NoArgsConstructor // 기본 생성자 추가
 public class RecipeFavorite {
     @Id
