@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class FridgeService {
 
     private final FridgeItemRepository fridgeItemRepository;
 
+    @Transactional
     public ResponseEntity<String> createItem(FridgeItemRequestDTO requestDTO, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         FridgeItem fridgeItem = new FridgeItem(requestDTO, user);
@@ -28,6 +30,7 @@ public class FridgeService {
 
     }
 
+    @Transactional
     public ResponseEntity<Page<FridgeItemResponseDTO>> findItems(int page, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         Pageable pageable = PageRequest.of(page, 100);
@@ -35,6 +38,7 @@ public class FridgeService {
         return ResponseEntity.ok(recipePage.map(FridgeItemResponseDTO::new));
     }
 
+    @Transactional
     public ResponseEntity<String> deleteItem(Long itemId, UserDetailsImpl userDetails) {
         FridgeItem fridgeItem = fridgeItemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("아이템를 찾을 수 없습니다."));
         if (!fridgeItem.getUser().getId().equals(userDetails.getUser().getId())) throw new IllegalArgumentException("사용자의 아이템이 아닙니다.");
