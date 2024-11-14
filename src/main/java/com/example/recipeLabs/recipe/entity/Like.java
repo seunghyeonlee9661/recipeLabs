@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "like")
+@Table(name = "likes")
 @NoArgsConstructor // 기본 생성자 추가
 public class Like {
     @Id

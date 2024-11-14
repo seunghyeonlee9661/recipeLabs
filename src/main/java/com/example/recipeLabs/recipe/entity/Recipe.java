@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Entity
-@Table(name = "recipe")
+@Table(name = "recipes")
 @NoArgsConstructor
 public class Recipe {
 

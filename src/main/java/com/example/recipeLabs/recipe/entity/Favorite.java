@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "favorite")
+@Table(name = "favorites")
 @NoArgsConstructor // 기본 생성자 추가
 public class Favorite {
 
