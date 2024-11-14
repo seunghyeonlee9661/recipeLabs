@@ -3,8 +3,8 @@ package com.example.recipeLabs.user.service;
 import com.example.recipeLabs.global.service.ImageTransformService;
 import com.example.recipeLabs.global.service.RedisService;
 import com.example.recipeLabs.recipe.dto.RecipeSimpleResponseDTO;
-import com.example.recipeLabs.recipe.entity.RecipeFavorite;
-import com.example.recipeLabs.recipe.repository.RecipeFavoriteRepository;
+import com.example.recipeLabs.recipe.entity.Favorite;
+import com.example.recipeLabs.recipe.repository.FavoriteRepository;
 import com.example.recipeLabs.user.dto.*;
 import com.example.recipeLabs.recipe.entity.Recipe;
 import com.example.recipeLabs.user.entity.User;
@@ -24,12 +24,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -42,7 +39,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
-    private final RecipeFavoriteRepository recipeFavoriteRepository;
+    private final FavoriteRepository favoriteRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final ImageService imageService;
@@ -195,7 +192,7 @@ public class UserService {
     /* 사용자 즐겨찾기한 게시물 검색 기능 */
     public ResponseEntity<Page<RecipeSimpleResponseDTO>> findUserFavorites(UserDetailsImpl userDetails, int page){
         Pageable pageable = PageRequest.of(page, 8, Sort.by(Sort.Order.desc("id")));
-        Page<RecipeFavorite> recipeFavoritePage   = recipeFavoriteRepository.findByUser(userDetails.getUser(),pageable);
+        Page<Favorite> recipeFavoritePage   = favoriteRepository.findByUser(userDetails.getUser(),pageable);
         // 각 즐겨찾기로 부터 레시피 정보를 가져와 DTO로 변환
         Page<RecipeSimpleResponseDTO> recipePage = recipeFavoritePage.map(recipeFavorite -> new RecipeSimpleResponseDTO(recipeFavorite.getRecipe()));
         return ResponseEntity.ok(recipePage);

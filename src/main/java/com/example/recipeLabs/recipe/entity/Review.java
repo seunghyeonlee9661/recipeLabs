@@ -1,5 +1,5 @@
 package com.example.recipeLabs.recipe.entity;
-import com.example.recipeLabs.recipe.dto.RecipeReviewRequestDTO;
+import com.example.recipeLabs.recipe.dto.ReviewRequestDTO;
 import com.example.recipeLabs.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "recipe_review")
+@Table(name = "review")
 @NoArgsConstructor
-public class RecipeReview {
+public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // ID 자동 생성 전략
@@ -36,13 +36,13 @@ public class RecipeReview {
     @Column(name = "rating", nullable = true)
     private Integer rating;
 
-    public RecipeReview(User user, Recipe recipe, RecipeReviewRequestDTO requestDTO){
+    public Review(User user, Recipe recipe, ReviewRequestDTO requestDTO){
         this.user = user;
         this.recipe = recipe;
         updateReview(requestDTO);
     }
 
-    public void updateReview(RecipeReviewRequestDTO requestDTO){
+    public void updateReview(ReviewRequestDTO requestDTO){
         this.contents = requestDTO.getContent();
         this.rating = requestDTO.getRating();
     }

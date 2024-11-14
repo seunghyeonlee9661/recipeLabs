@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 @Getter
-public class RecipeUpdateRequestDTO {
+public class RecipeRequestDTO {
 
     @Schema(description = "레시피 제목", example = "돼지고기 김치찌개")
     private String title; // 레시피 제목

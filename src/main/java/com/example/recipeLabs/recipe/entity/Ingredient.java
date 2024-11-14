@@ -1,6 +1,6 @@
 package com.example.recipeLabs.recipe.entity;
 
-import com.example.recipeLabs.recipe.dto.RecipeIngredientRequestDTO;
+import com.example.recipeLabs.recipe.dto.IngredientRequestDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "ingredient")
 @Getter
 @NoArgsConstructor
-public class RecipeIngredient {
+public class Ingredient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class RecipeIngredient {
     @Column(name = "quantity", nullable = false)
     private String quantity;
 
-    public RecipeIngredient(Recipe recipe, RecipeIngredientRequestDTO requestDTO){
+    public Ingredient(Recipe recipe, IngredientRequestDTO requestDTO){
         this.recipe = recipe;
         this.name = requestDTO.getName();
         this.quantity = requestDTO.getQuantity();

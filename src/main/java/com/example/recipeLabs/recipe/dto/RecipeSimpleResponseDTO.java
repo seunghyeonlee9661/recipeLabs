@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Getter
 public class RecipeSimpleResponseDTO {
@@ -41,7 +40,7 @@ public class RecipeSimpleResponseDTO {
         this.description = recipe.getDescription();
         this.image = recipe.getImage();
         this.createdAt = recipe.getCreatedAt();
-        this.likes = recipe.getRecipeLikes().size();
-        this.favorites = recipe.getRecipeFavorites().size();
+        this.likes = recipe.getLikes().size();
+        this.favorites = recipe.getFavorites().size();
     }
 }

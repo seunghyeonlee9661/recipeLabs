@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 @Getter
-public class RecipeIngredientRequestDTO {
+public class IngredientRequestDTO {
 
     @Schema(description = "재료 이름", example = "돼지고기")
     private String name;

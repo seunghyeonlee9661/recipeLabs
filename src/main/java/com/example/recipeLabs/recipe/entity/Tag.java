@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tag")
 @NoArgsConstructor
-public class RecipeTag {
+public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,7 +16,7 @@ public class RecipeTag {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    public RecipeTag(String name) {
+    public Tag(String name) {
         this.name = name;
     }
 }

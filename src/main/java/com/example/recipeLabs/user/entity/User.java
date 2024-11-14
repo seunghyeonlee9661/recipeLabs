@@ -2,8 +2,8 @@ package com.example.recipeLabs.user.entity;
 //import com.example.recipeLabs.fridge.entity.FridgeItem;
 import com.example.recipeLabs.user.dto.UserCreateRequestDTO;
 import com.example.recipeLabs.recipe.entity.Recipe;
-import com.example.recipeLabs.recipe.entity.RecipeFavorite;
-import com.example.recipeLabs.recipe.entity.RecipeLike;
+import com.example.recipeLabs.recipe.entity.Favorite;
+import com.example.recipeLabs.recipe.entity.Like;
 import com.example.recipeLabs.global.enums.Provider;
 import com.example.recipeLabs.user.dto.UserUpdateRequestDTO;
 import jakarta.persistence.*;
@@ -59,10 +59,10 @@ public class User {
     private List<Recipe> recipes;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<RecipeLike> recipeLikeList;
+    private List<Like> likeList;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<RecipeFavorite> recipeFavorites;
+    private List<Favorite> favorites;
 //
 //    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
 //    private List<FridgeItem> refrigeratorItemList;

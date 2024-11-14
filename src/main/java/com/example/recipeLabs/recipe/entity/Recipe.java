@@ -1,5 +1,5 @@
 package com.example.recipeLabs.recipe.entity;
-import com.example.recipeLabs.recipe.dto.RecipeUpdateRequestDTO;
+import com.example.recipeLabs.recipe.dto.RecipeRequestDTO;
 import com.example.recipeLabs.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -47,26 +47,26 @@ public class Recipe {
     private List<RecipeStep> recipeSteps;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<RecipeLike> recipeLikes;
+    private List<Like> likes;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<RecipeFavorite> recipeFavorites;
+    private List<Favorite> favorites;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<RecipeReview> recipeReviews;
+    private List<Review> reviews;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<RecipeIngredient> recipeIngredients;
+    private List<Ingredient> ingredients;
 
     @ManyToMany
     @JoinTable(name = "recipe_tag",joinColumns = @JoinColumn(name = "recipe_id"),inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private List<RecipeTag> recipeTags; // 레시피에 달린 태그들
+    private List<Tag> tags; // 레시피에 달린 태그들
 
     public Recipe(User user){
         this.user = user;
     }
 
-    public void updateContent(RecipeUpdateRequestDTO requestDTO){
+    public void updateContent(RecipeRequestDTO requestDTO){
         this.title = requestDTO.getTitle();
         this.description = requestDTO.getDescription();
         this.servings = requestDTO.getServings();

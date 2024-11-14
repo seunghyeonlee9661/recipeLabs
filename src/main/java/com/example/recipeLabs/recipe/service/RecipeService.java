@@ -27,12 +27,12 @@ import java.util.Optional;
 public class RecipeService {
 
     private final RecipeRepository recipeRepository;
-    private final RecipeLikeRepository recipeLikeRepository;
-    private final RecipeFavoriteRepository recipeFavoriteRepository;
+    private final LikeRepository likeRepository;
+    private final FavoriteRepository favoriteRepository;
     private final RecipeStepRepository recipeStepRepository;
-    private final RecipeReviewRepository recipeReviewRepository;
-    private final RecipeTagRepository recipeTagRepository;
-    private final RecipeIngredientRepository recipeIngredientRepository;
+    private final ReviewRepository reviewRepository;
+    private final TagRepository tagRepository;
+    private final IngredientRepository ingredientRepository;
     private final ImageService imageService;
     private final ImageTransformService imageTransformService;
 
@@ -60,13 +60,13 @@ public class RecipeService {
         // 사용자 레시피 좋아요 상태 확인
         boolean isLiked = Optional.ofNullable(userDetails)
                 .map(UserDetailsImpl::getUser)
-                .map(user -> recipeLikeRepository.existsByUserAndRecipe(user, recipe))
+                .map(user -> likeRepository.existsByUserAndRecipe(user, recipe))
                 .orElse(false);
 
         // 사용자 레시피 즐겨찾기 상태 확인
         boolean isFavorite = Optional.ofNullable(userDetails)
                 .map(UserDetailsImpl::getUser)
-                .map(user -> recipeFavoriteRepository.existsByUserAndRecipe(user, recipe))
+                .map(user -> favoriteRepository.existsByUserAndRecipe(user, recipe))
                 .orElse(false);
 
         return ResponseEntity.ok(new RecipeResponseDTO(recipe, isLiked,isFavorite));
@@ -88,7 +88,7 @@ public class RecipeService {
     }
     /* 레시피 수정 - 내용 */
     @Transactional
-    public ResponseEntity<String> updateRecipeContent(Long recipeId, RecipeUpdateRequestDTO requestDTO, UserDetailsImpl userDetails){
+    public ResponseEntity<String> updateRecipeContent(Long recipeId, RecipeRequestDTO requestDTO, UserDetailsImpl userDetails){
         // 레시피 확인
         Recipe recipe = validateRecipeOwner(recipeId,userDetails);
         // 업데이트
@@ -121,9 +121,9 @@ public class RecipeService {
         // 레시피 확인
         Recipe recipe = validateRecipeOwner(recipeId,userDetails);
         // 현재 레시피에 대한 좋아요 추가 혹은 삭제
-        recipeLikeRepository.findByUserAndRecipe(userDetails.getUser(), recipe)
-                .ifPresentOrElse(recipeLikeRepository::delete,  // 좋아요가 있으면 삭제
-                        () -> recipeLikeRepository.save(new RecipeLike(recipe, userDetails.getUser()))  // 좋아요가 없으면 추가
+        likeRepository.findByUserAndRecipe(userDetails.getUser(), recipe)
+                .ifPresentOrElse(likeRepository::delete,  // 좋아요가 있으면 삭제
+                        () -> likeRepository.save(new Like(recipe, userDetails.getUser()))  // 좋아요가 없으면 추가
                 );
         return ResponseEntity.status(HttpStatus.CREATED).body("좋아요 설정 변경됨");
     }
@@ -133,9 +133,9 @@ public class RecipeService {
         // 레시피 확인
         Recipe recipe = validateRecipeOwner(recipeId,userDetails);
         // 현재 레시피에 대한 즐겨찾기 추가 혹은 삭제
-        recipeFavoriteRepository.findByUserAndRecipe(userDetails.getUser(), recipe)
-                .ifPresentOrElse(recipeFavoriteRepository::delete,  // 즐겨찾기가 있으면 삭제
-                        () -> recipeFavoriteRepository.save(new RecipeFavorite(recipe, userDetails.getUser()))  // 즐겨찾기가 없으면 추가
+        favoriteRepository.findByUserAndRecipe(userDetails.getUser(), recipe)
+                .ifPresentOrElse(favoriteRepository::delete,  // 즐겨찾기가 있으면 삭제
+                        () -> favoriteRepository.save(new Favorite(recipe, userDetails.getUser()))  // 즐겨찾기가 없으면 추가
                 );
         return ResponseEntity.status(HttpStatus.CREATED).body("즐겨찾기 설정 변경됨");
     }
@@ -143,49 +143,49 @@ public class RecipeService {
     /*_________________레시피 리뷰 기능___________________________*/
     /* 레시피 리뷰 - 추가 */
     @Transactional
-    public ResponseEntity<String> createRecipeReview(Long recipeId, RecipeReviewRequestDTO requestDTO, UserDetailsImpl userDetails){
+    public ResponseEntity<String> createRecipeReview(Long recipeId, ReviewRequestDTO requestDTO, UserDetailsImpl userDetails){
         // 레시피 확인
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
         // 이미 작성된 리뷰가 있는지 확인
-        boolean isReviewed = recipeReviewRepository.existsByRecipeAndUser(recipe,userDetails.getUser());
+        boolean isReviewed = reviewRepository.existsByRecipeAndUser(recipe,userDetails.getUser());
         // 있을 경우 리뷰 작성 거부
         if(isReviewed) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 이 레시피에 대한 리뷰를 작성했습니다.");
         // 리뷰 데이터 생성
-        RecipeReview review = new RecipeReview(userDetails.getUser(),recipe, requestDTO);
-        recipeReviewRepository.save(review);
+        Review review = new Review(userDetails.getUser(),recipe, requestDTO);
+        reviewRepository.save(review);
         return ResponseEntity.status(HttpStatus.CREATED).body("리뷰가 추가되었습니다.");
     }
     /* 레시피 리뷰 - 수정 */
     @Transactional
-    public ResponseEntity<String> updateRecipeReview(Long reviewId,RecipeReviewRequestDTO requestDTO, UserDetailsImpl userDetails){
+    public ResponseEntity<String> updateRecipeReview(Long reviewId, ReviewRequestDTO requestDTO, UserDetailsImpl userDetails){
         // 리뷰 확인
-        RecipeReview review = recipeReviewRepository.findById(reviewId).orElseThrow(() -> new IllegalArgumentException("레시피 리뷰를 찾을 수 없습니다."));
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new IllegalArgumentException("레시피 리뷰를 찾을 수 없습니다."));
         // 리뷰 작성자 확인
         if (!review.getUser().getId().equals(userDetails.getUser().getId())) throw new IllegalArgumentException("리뷰 작성자가 아니면 편집할 수 없습니다.");
         // 리뷰 내용 업데이트
         review.updateReview(requestDTO);
-        recipeReviewRepository.save(review);
+        reviewRepository.save(review);
         return ResponseEntity.status(HttpStatus.CREATED).body("리뷰가 추가되었습니다.");
     }
     /* 레시피 리뷰 - 제거 */
     @Transactional
     public ResponseEntity<String> deleteRecipeReview(Long reviewId, UserDetailsImpl userDetails){
         // 리뷰 확인
-        RecipeReview review = recipeReviewRepository.findById(reviewId).orElseThrow(() -> new IllegalArgumentException("레시피 리뷰를 찾을 수 없습니다."));
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new IllegalArgumentException("레시피 리뷰를 찾을 수 없습니다."));
         // 리뷰 작성자 확인
         if (!review.getUser().getId().equals(userDetails.getUser().getId())) throw new IllegalArgumentException("리뷰 작성자가 아니면 제거할 수 없습니다.");
-        recipeReviewRepository.delete(review);
+        reviewRepository.delete(review);
         return ResponseEntity.status(HttpStatus.CREATED).body("리뷰가 제거되었습니다.");
     }
     
     /*_________________레시피 재료 기능___________________________*/
     /* 레시피 재료 - 추가 */
     @Transactional
-    public ResponseEntity<String> updateRecipeIngredient(Long recipeId, RecipeIngredientRequestDTO requestDTO, UserDetailsImpl userDetails){
+    public ResponseEntity<String> updateRecipeIngredient(Long recipeId, IngredientRequestDTO requestDTO, UserDetailsImpl userDetails){
         // 레시피 확인
         Recipe recipe = validateRecipeOwner(recipeId,userDetails);
-        RecipeIngredient ingredient = new RecipeIngredient(recipe,requestDTO);
-        recipe.getRecipeIngredients().add(ingredient);
+        Ingredient ingredient = new Ingredient(recipe,requestDTO);
+        recipe.getIngredients().add(ingredient);
         recipeRepository.save(recipe);
         return ResponseEntity.status(HttpStatus.CREATED).body("재료가 추가되었습니다.");
     }
@@ -195,9 +195,9 @@ public class RecipeService {
         // 레시피 확인
         Recipe recipe = validateRecipeOwner(recipeId,userDetails);
         // 레시피 재료 확인
-        RecipeIngredient ingredient = recipeIngredientRepository.findById(ingredientId).orElseThrow(() -> new IllegalArgumentException("재료를 찾을 수 없습니다."));
-        if (recipe.getRecipeIngredients().contains(ingredient)) {
-            recipe.getRecipeIngredients().remove(ingredient);
+        Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow(() -> new IllegalArgumentException("재료를 찾을 수 없습니다."));
+        if (recipe.getIngredients().contains(ingredient)) {
+            recipe.getIngredients().remove(ingredient);
             recipeRepository.save(recipe);
             return ResponseEntity.ok("재료가 제거되었습니다.");
         } else {
@@ -208,9 +208,9 @@ public class RecipeService {
     /*_________________레시피 태그 기능___________________________*/
     /* 레시피 태그 - 검색 */
     @Transactional
-    public ResponseEntity<List<RecipeTag>> searchRecipeTags(String search){
-        List<RecipeTag> recipeTagList = recipeTagRepository.findByNameContaining(search);
-        return ResponseEntity.status(HttpStatus.CREATED).body(recipeTagList);
+    public ResponseEntity<List<Tag>> searchRecipeTags(String search){
+        List<Tag> tagList = tagRepository.findByNameContaining(search);
+        return ResponseEntity.status(HttpStatus.CREATED).body(tagList);
     }
     /* 레시피 태그 - 추가 */
     @Transactional
@@ -218,8 +218,8 @@ public class RecipeService {
         // 레시피 확인
         Recipe recipe = validateRecipeOwner(recipeId,userDetails);
         // 레시피 태그 확인
-        RecipeTag tag = recipeTagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("태그를 찾을 수 없습니다."));
-        recipe.getRecipeTags().add(tag);
+        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("태그를 찾을 수 없습니다."));
+        recipe.getTags().add(tag);
         recipeRepository.save(recipe);
         return ResponseEntity.status(HttpStatus.CREATED).body("태그가 추가되었습니다.");
     }
@@ -229,10 +229,10 @@ public class RecipeService {
         // 레시피 확인
         Recipe recipe = validateRecipeOwner(recipeId,userDetails);
         // 레시피 태그 확인
-        RecipeTag tag = recipeTagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("태그를 찾을 수 없습니다."));
+        Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("태그를 찾을 수 없습니다."));
 
-        if (recipe.getRecipeTags().contains(tag)) {
-            recipe.getRecipeTags().remove(tag);
+        if (recipe.getTags().contains(tag)) {
+            recipe.getTags().remove(tag);
             recipeRepository.save(recipe);
             return ResponseEntity.ok("태그가 제거되었습니다.");
         } else {
