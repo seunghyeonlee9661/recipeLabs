@@ -12,7 +12,7 @@ public class RecipeUpdateRequestDTO {
     @Schema(description = "레시피 설명", example = "매운 김치와 돼지고기가 어우러진 맛있는 김치찌개")
     private String description; // 레시피 설명
 
-    @Schema(description = "레시피 재료", example = "{\"돼지고기\":\"100g\", \"김치\":\"200g\"}")
-    private String ingredients; // 레시피 재료 (JSON 형식의 문자열)
+    @Schema(description = "레시피 인원수", example = "2")
+    private Integer servings; // 레시피 인원수
 
 }

@@ -1,12 +1,9 @@
 package com.example.recipeLabs.recipe.controller;
 
 import com.example.recipeLabs.global.security.UserDetailsImpl;
-import com.example.recipeLabs.recipe.dto.RecipeResponseDTO;
-import com.example.recipeLabs.recipe.dto.RecipeSimpleResponseDTO;
-import com.example.recipeLabs.recipe.dto.RecipeStepCreateRequestDTO;
-import com.example.recipeLabs.recipe.dto.RecipeUpdateRequestDTO;
+import com.example.recipeLabs.recipe.dto.*;
+import com.example.recipeLabs.recipe.entity.RecipeTag;
 import com.example.recipeLabs.recipe.service.RecipeService;
-import com.example.recipeLabs.user.dto.UserResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -95,7 +93,7 @@ public class RecipeController {
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.updateRecipeContent(recipeId, recipeUpdateRequestDTO, userDetails);
     }
-
+    
     /* 레시피 삭제 */
     @DeleteMapping("/{recipeId}")
     @Operation(summary = "레시피 삭제", description = "레시피 ID에 해당하는 레시피를 삭제합니다. 삭제 시 레시피의 이미지도 함께 제거됩니다.")
@@ -152,6 +150,123 @@ public class RecipeController {
         return recipeService.setFavorite(recipeId,userDetails);
     }
 
+    /*_____________________레시피 리뷰__________________*/
+
+    /* 레시피 리뷰 추가 */
+    @PostMapping("/{recipeId}/review")
+    @Operation(summary = "레시피 리뷰 추가", description = "레시피 ID에 해당하는 리뷰를 추가합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "레시피 리뷰 추가 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 또는 유효하지 않은 레시피 ID", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<String> createRecipeReview(
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
+            @RequestBody RecipeReviewRequestDTO requestDTO,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.createRecipeReview(recipeId, requestDTO, userDetails);
+    }
+
+    /* 레시피 리뷰 수정 */
+    @PostMapping("/review/{reviewId}")
+    @Operation(summary = "레시피 리뷰 수정", description = "레시피 ID에 해당하는 리뷰를 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "레시피 리뷰 수정 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 또는 유효하지 않은 레시피 ID", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<String> updateRecipeReview(
+            @PathVariable @Parameter(description = "리뷰 ID") Long reviewId,
+            @RequestBody RecipeReviewRequestDTO requestDTO,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.updateRecipeReview(reviewId, requestDTO, userDetails);
+    }
+
+    /* 레시피 리뷰 제거 */
+    @DeleteMapping("/review/{reviewId}")
+    @Operation(summary = "레시피 리뷰 제거", description = "레시피 ID에 해당하는 리뷰를 제거합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "레시피 리뷰 제거 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 또는 유효하지 않은 레시피 ID", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<String> deleteRecipeReview(
+            @PathVariable @Parameter(description = "리뷰 ID") Long reviewId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.deleteRecipeReview(reviewId, userDetails);
+    }
+
+    /*_____________________레시피 재료__________________*/
+
+    /* 레시피 재료 추가 */
+    @PostMapping("/{recipeId}/ingredient")
+    @Operation(summary = "레시피 재료 추가", description = "레시피 ID에 해당하는 재료를 추가합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "레시피 재료 추가 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 또는 유효하지 않은 레시피 ID", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<String> updateRecipeIngredient(
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
+            @RequestBody RecipeIngredientRequestDTO requestDTO,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.updateRecipeIngredient(recipeId, requestDTO, userDetails);
+    }
+
+    /* 레시피 재료 제거 */
+    @DeleteMapping("/{recipeId}/ingredient")
+    @Operation(summary = "레시피 태그 제거", description = "레시피 ID에 해당하는 재료를 제거합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "레시피 재료 제거 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 또는 유효하지 않은 레시피 ID", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<String> deleteRecipeIngredient(
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
+            @RequestParam  @Parameter(description = "재료 ID") Long ingredientId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.deleteRecipeIngredient(recipeId,ingredientId, userDetails);
+    }
+
+    /*_____________________레시피 태그__________________*/
+
+    /* 레시피 태그 검색 */
+    @GetMapping("/tags")
+    public ResponseEntity<List<RecipeTag>> searchRecipeTags(
+            @RequestParam @Parameter(description = "검색어") String search) {
+        return recipeService.searchRecipeTags(search);
+    }
+
+    /* 레시피 태그 추가 */
+    @PostMapping("/{recipeId}/tags")
+    @Operation(summary = "레시피 태그 추가", description = "레시피 ID에 해당하는 태그를 추가합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "레시피 태그 추가 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 또는 유효하지 않은 레시피 ID", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<String> updateRecipeTag(
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
+            @RequestParam  @Parameter(description = "태그 ID") Long tagId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.updateRecipeTag(recipeId, tagId, userDetails);
+    }
+
+    /* 레시피 태그 제거 */
+    @DeleteMapping("/{recipeId}/tags")
+    @Operation(summary = "레시피 태그 제거", description = "레시피 ID에 해당하는 태그를 제거합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "레시피 태그 제거 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 또는 유효하지 않은 레시피 ID", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<String> deleteRecipeTag(
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
+            @RequestParam  @Parameter(description = "태그 ID") Long tagId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.deleteRecipeTag(recipeId,tagId, userDetails);
+    }
+
     /*_____________________레시피 단계__________________*/
 
     /* 레시피 단계 추가*/
@@ -179,8 +294,8 @@ public class RecipeController {
     public ResponseEntity<String> createRecipeStep(
             @PathVariable @Parameter(description = "레시피의 단계 ID") Long recipeStepId,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody RecipeStepCreateRequestDTO recipeStepCreateRequestDTO){
-        return recipeService.updateRecipeStepContent(recipeStepId,recipeStepCreateRequestDTO,userDetails);
+            @RequestBody RecipeStepRequestDTO recipeStepRequestDTO){
+        return recipeService.updateRecipeStepContent(recipeStepId, recipeStepRequestDTO,userDetails);
     }
 
     /* 레시피 단계 이미지 수정*/

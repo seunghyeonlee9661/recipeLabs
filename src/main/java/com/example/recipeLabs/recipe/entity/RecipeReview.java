@@ -1,13 +1,11 @@
 package com.example.recipeLabs.recipe.entity;
-import com.example.recipeLabs.recipe.dto.RecipeUpdateRequestDTO;
+import com.example.recipeLabs.recipe.dto.RecipeReviewRequestDTO;
 import com.example.recipeLabs.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Entity
@@ -23,68 +21,29 @@ public class RecipeReview {
     @JoinColumn(name = "user_id", nullable = false)
     private User user; // 회원 정보
 
-    @Column(length = 255, nullable = true)
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "recipe_id", nullable = false)
+    private Recipe recipe; // 레시피
 
-    @Column(length = 255, nullable = true)
-    private String description;
-
-    @Column(length = 255, nullable = true)
-    private String image;
-
-    @Column(name = "is_complete", nullable = false)
-    private Boolean isComplete = false;
-
-    @Column(name = "servings", nullable = true)
-    private Integer servings;
+    @Lob
+    @Column(name = "contents",nullable = true)
+    private String contents;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false) // 수정 불가
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    @OrderBy("stepOrder ASC") // stepOrder 기준으로 오름차순 정렬
-    private List<RecipeStep> recipeSteps;
+    @Column(name = "rating", nullable = true)
+    private Integer rating;
 
-    @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<RecipeLike> recipeLikes;
-
-    @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<RecipeFavorite> recipeFavorites;
-
-    @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<Ingredient> ingredients;
-
-    public RecipeReview(User user){
+    public RecipeReview(User user, Recipe recipe, RecipeReviewRequestDTO requestDTO){
         this.user = user;
+        this.recipe = recipe;
+        updateReview(requestDTO);
     }
 
-    public void updateContent(RecipeUpdateRequestDTO requestDTO){
-        this.title = requestDTO.getTitle();
-        this.description = requestDTO.getDescription();
-    }
-
-    public void updateImage(String image){
-        this.image = image;
-    }
-
-    // 레시피의 작성이 완료되었음을 체크
-    public void setIsComplete(boolean isComplete){
-        this.isComplete = isComplete;
-    }
-
-    // 레시피 단계 순서 변경 로직
-    public void updateStepOrder(int currentOrder, int newOrder) {
-        if (currentOrder < newOrder) {
-            // 현재 순서가 새 순서보다 앞에 있으면, 중간 단계들 -1
-            recipeSteps.stream()
-                    .filter(step -> step.getStepOrder() > currentOrder && step.getStepOrder() <= newOrder)
-                    .forEach(step -> step.setStepOrder(step.getStepOrder() - 1));
-        } else {
-            // 현재 순서가 새 순서보다 뒤에 있으면, 중간 단계들 +1
-            recipeSteps.stream()
-                    .filter(step -> step.getStepOrder() < currentOrder && step.getStepOrder() >= newOrder)
-                    .forEach(step -> step.setStepOrder(step.getStepOrder() + 1));
-        }
+    public void updateReview(RecipeReviewRequestDTO requestDTO){
+        this.contents = requestDTO.getContent();
+        this.rating = requestDTO.getRating();
     }
 }

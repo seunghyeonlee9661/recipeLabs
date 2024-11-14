@@ -4,23 +4,19 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "ingredient")
 @Getter
+@Entity
+@Table(name = "tag")
 @NoArgsConstructor
-public class Ingredient {
-
+public class RecipeTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
-    private Recipe recipe;
-
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @Column(name = "quantity", nullable = false)
-    private String quantity;
+    public RecipeTag(String name) {
+        this.name = name;
+    }
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "recipe_favorite")
 @NoArgsConstructor // 기본 생성자 추가
 public class RecipeFavorite {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -56,15 +56,11 @@ public class Recipe {
     private List<RecipeReview> recipeReviews;
 
     @OneToMany(mappedBy = "recipe", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    private List<Ingredient> ingredients;
+    private List<RecipeIngredient> recipeIngredients;
 
     @ManyToMany
-    @JoinTable(
-            name = "recipe_tag",  // 중간 테이블 이름
-            joinColumns = @JoinColumn(name = "recipe_id"),  // 레시피 외래 키
-            inverseJoinColumns = @JoinColumn(name = "tag_id")  // 태그 외래 키
-    )
-    private List<Tag> tags; // 레시피에 달린 태그들
+    @JoinTable(name = "recipe_tag",joinColumns = @JoinColumn(name = "recipe_id"),inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private List<RecipeTag> recipeTags; // 레시피에 달린 태그들
 
     public Recipe(User user){
         this.user = user;
@@ -73,6 +69,7 @@ public class Recipe {
     public void updateContent(RecipeUpdateRequestDTO requestDTO){
         this.title = requestDTO.getTitle();
         this.description = requestDTO.getDescription();
+        this.servings = requestDTO.getServings();
     }
 
     public void updateImage(String image){

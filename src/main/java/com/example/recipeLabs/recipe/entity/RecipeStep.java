@@ -1,5 +1,5 @@
 package com.example.recipeLabs.recipe.entity;
-import com.example.recipeLabs.recipe.dto.RecipeStepCreateRequestDTO;
+import com.example.recipeLabs.recipe.dto.RecipeStepRequestDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +34,7 @@ public class RecipeStep {
         this.stepOrder = stepOrder;
     }
 
-    public void updateContent(RecipeStepCreateRequestDTO requestDTO){
+    public void updateContent(RecipeStepRequestDTO requestDTO){
         this.content = requestDTO.getContent();
         this.cookingTime = requestDTO.getCookingTime();
     }
@@ -45,6 +45,5 @@ public class RecipeStep {
 
     public void setStepOrder(int stepOrder){
         this.stepOrder = stepOrder;
-
     }
 }
