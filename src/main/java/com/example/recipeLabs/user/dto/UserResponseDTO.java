@@ -50,7 +50,7 @@ public class UserResponseDTO {
         this.introduction = user.getIntroduction();
         this.profileImage = user.getProfileImage();
         this.createdAt = user.getCreatedAt();
-        this.follow = user.getFollowing().size();  // 팔로우한 사람 수
+        this.follow = user.getFollowings().size();  // 팔로우한 사람 수
         this.following = user.getFollowers().size();  // 팔로워 수
     }
 }
