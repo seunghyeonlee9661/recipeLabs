@@ -64,7 +64,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         if(user.isEmailVerified()){
             // AccessToken 및 RefreshToken 생성
             String accessToken = jwtUtil.createAccessToken(user);
+            log.info("accessToken - {}", accessToken);
             String refreshToken = jwtUtil.createRefreshToken(user);
+            log.info("refreshToken - {}", refreshToken);
             // Redis 및 쿠키에 토큰 저장
             jwtUtil.addTokenToRedis(accessToken, refreshToken);
             jwtUtil.addTokenToCookie(accessToken, response);
