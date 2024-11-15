@@ -74,7 +74,7 @@ public class User {
     private String emailVerificationCode;
 
     // 팔로우하는 사람들 (이 사용자가 팔로우한 사용자들)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "follow", // 관계 테이블 이름
             joinColumns = @JoinColumn(name = "follower_id"), // 팔로우하는 사람
