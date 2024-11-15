@@ -14,12 +14,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Tag(name = "냉장고 API", description = "냉장고 관련 API")
-@RequestMapping("/fridge")
+@RequestMapping("/fridges")
 @RequiredArgsConstructor
 public class FridgeController {
     private final FridgeService fridgeService;
 
-    /* 냉장고 아이템 추가 */
+    // 냉장고 아이템 목록
+    @GetMapping("")
+    public ResponseEntity<Page<FridgeItemResponseDTO>> findItems(
+            @RequestParam(value = "page", defaultValue = "0") @Parameter(description = "조회할 페이지 번호 (기본값: 0)") int page,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return fridgeService.findItems(page,userDetails);
+    }
+
+    // 냉장고 아이템 추가
     @PostMapping("")
     public ResponseEntity<String> createItem(
             @RequestBody FridgeItemRequestDTO fridgeItemRequestDTO,
@@ -28,15 +36,16 @@ public class FridgeController {
     }
 
     /* TODO 검색 필터링용! */
-    /* 냉장고 아이템 목록 */
-    @GetMapping("")
-    public ResponseEntity<Page<FridgeItemResponseDTO>> findItems(
-            @RequestParam(value = "page", defaultValue = "0") @Parameter(description = "조회할 페이지 번호 (기본값: 0)") int page,
+    // 냉장고 아이템 목록
+    @PutMapping("")
+    public ResponseEntity<String> updateItems(
+            @PathVariable @Parameter(description = "아이템 ID") Long itemId,
+            @RequestBody FridgeItemRequestDTO fridgeItemRequestDTO,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return fridgeService.findItems(page,userDetails);
+        return fridgeService.updateItems(itemId,fridgeItemRequestDTO,userDetails);
     }
 
-    /* 냉장고 아이템 제거 */
+    // 냉장고 아이템 제거
     @DeleteMapping("")
     public ResponseEntity<String> deleteItem(
             @PathVariable @Parameter(description = "아이템 ID") Long itemId,

@@ -1,5 +1,6 @@
 package com.example.recipeLabs.user.entity;
 //import com.example.recipeLabs.fridge.entity.FridgeItem;
+import com.example.recipeLabs.fridge.entity.FridgeItem;
 import com.example.recipeLabs.user.dto.UserCreateRequestDTO;
 import com.example.recipeLabs.recipe.entity.Recipe;
 import com.example.recipeLabs.recipe.entity.Favorite;
@@ -63,9 +64,13 @@ public class User {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<Favorite> favorites;
-//
-//    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
-//    private List<FridgeItem> refrigeratorItemList;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    private List<FridgeItem> fridgeItem;
+
+    @Lob
+    @Column(name = "introduction",nullable = true)
+    private String introduction;
 
     // 기본 회원가입
     public User(UserCreateRequestDTO requetDTO,String password, String code){
@@ -91,6 +96,7 @@ public class User {
     // FIXME : 이후에 사용자 정보 업데이트에 따라 추가로 변경 추가 가능!
     public void updateInfo(UserUpdateRequestDTO requestDTO){
         this.name = requestDTO.getName();
+        this.introduction = requestDTO.getIntroduction();
     }
 
     public void updateImage(String image){

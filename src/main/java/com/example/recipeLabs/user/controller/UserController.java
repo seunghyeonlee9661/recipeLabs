@@ -187,7 +187,7 @@ public class UserController {
 
     /* 사용자 레시피 정보 요청 */
     @GetMapping("/recipes")
-    @Operation(summary = "사용자의 레시피 정보 요청", description = "사용자가 작성한 레시피 정보를 페이지네이션하여 요청합니다.")
+    @Operation(summary = "사용자의 작성 레시피 정보 요청", description = "사용자가 작성한 레시피 정보를 페이지네이션하여 요청합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사용자 레시피 정보 반환", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "잘못된 페이지 번호", content = @Content(mediaType = "application/json"))
@@ -198,7 +198,7 @@ public class UserController {
         return userService.findUserRecipes(userDetails,page);
     }
 
-    /* 사용자 레시피 정보 요청 */
+    /* 사용자 즐겨찾기 정보 요청 */
     @GetMapping("/favorites")
     @Operation(summary = "사용자의 즐겨찾기 레시피 정보 요청", description = "사용자가 즐겨찾기한 레시피 정보를 페이지네이션하여 요청합니다.")
     @ApiResponses(value = {

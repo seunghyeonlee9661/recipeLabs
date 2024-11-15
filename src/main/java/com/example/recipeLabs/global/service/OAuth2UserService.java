@@ -44,7 +44,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                             (String) attributes.get("email"),
                             provider,
                             providerId,
-                            (String) attributes.get("name"),
+                            (String) attributes.get("name")+"_"+provider+"_"+providerId,
                             (String) attributes.get("profileImage")
                     );
                     log.info("새 회원 - 회원가입");

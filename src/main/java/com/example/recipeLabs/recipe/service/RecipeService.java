@@ -221,6 +221,7 @@ public class RecipeService {
     }
 
     //_________________레시피 태그 기능___________________________
+
     // 레시피 태그 - 검색
     @Transactional
     public ResponseEntity<List<Tag>> searchRecipeTags(String search){
@@ -261,8 +262,8 @@ public class RecipeService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("레시피에 포함되지 않은 태그입니다.");
         }
     }
-
     //_________________레시피 단계 기능___________________________
+
     // 레시피 단계 추가
     @Transactional
     public ResponseEntity<String> createRecipeStep(Long recipeId, UserDetailsImpl userDetails) {
@@ -275,7 +276,7 @@ public class RecipeService {
         recipeStepRepository.save(recipeStep);
         return ResponseEntity.status(HttpStatus.CREATED).body("새로운 레시피 단계가 추가되었습니다.");
     }
-    /* 레시피 단계 수정 - 내용 */
+    // 레시피 단계 수정 - 내용
     @Transactional
     public ResponseEntity<String> updateRecipeStepContent(Long recipeStepId, RecipeStepRequestDTO requestDTO, UserDetailsImpl userDetails){
         // 레시피 단계 확인
@@ -284,7 +285,7 @@ public class RecipeService {
         recipeStep.updateContent(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("레시피 단계 내용 수정");
     }
-    /* 레시피 단계 수정 - 이미지 */
+    // 레시피 단계 수정 - 이미지
     @Transactional
     public ResponseEntity<String> updateRecipeStepImage(Long recipeStepId, MultipartFile image,UserDetailsImpl userDetails) throws IOException {
         // 레시피 단계 확인
@@ -299,7 +300,7 @@ public class RecipeService {
         recipeStep.updateImage(imageUrl);
         return ResponseEntity.status(HttpStatus.CREATED).body("레시피 단계 이미지 수정");
     }
-    /* 레시피 단계 삭제 */
+    // 레시피 단계 삭제
     @Transactional
     public ResponseEntity<String> deleteRecipeStep(Long recipeStepId, UserDetailsImpl userDetails) {
         // 레시피 단계 확인
@@ -310,7 +311,7 @@ public class RecipeService {
         recipeStepRepository.delete(recipeStep);
         return ResponseEntity.ok("레시피 단계가 삭제되었습니다.");
     }
-    /* 레시피 단계 순서 변경 */
+    // 레시피 단계 순서 변경
     @Transactional
     public ResponseEntity<String> updateRecipeStepOrder(Long recipeId, int currentOrder, int newOrder,UserDetailsImpl userDetails) {
         // 레시피 확인
@@ -330,7 +331,8 @@ public class RecipeService {
         return ResponseEntity.ok("단계 순서가 업데이트되었습니다.");
     }
 
-    /*_________________레시피 관련 검증 메서드___________________________*/
+    // __________________레시피 관련 검증 메서드___________________________
+
     // 레시피 작성자 검증 메서드
     private Recipe validateRecipeOwner(Long recipeId, UserDetailsImpl userDetails) {
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));

@@ -39,4 +39,10 @@ public class FridgeItem {
         this.quantity = requestDTO.getQuantity();
         this.expirationDate = requestDTO.getExpirationDate();
     }
+
+    public void update(FridgeItemRequestDTO requestDTO){
+        this.ingredient = requestDTO.getIngredient();
+        this.quantity = requestDTO.getQuantity();
+        this.expirationDate = requestDTO.getExpirationDate();
+    }
 }

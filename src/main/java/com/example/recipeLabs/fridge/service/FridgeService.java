@@ -27,7 +27,6 @@ public class FridgeService {
         FridgeItem fridgeItem = new FridgeItem(requestDTO, user);
         fridgeItemRepository.save(fridgeItem);
         return ResponseEntity.status(HttpStatus.OK).body("냉장고 아이템이 추가되었습니다.");
-
     }
 
     @Transactional
@@ -36,6 +35,16 @@ public class FridgeService {
         Pageable pageable = PageRequest.of(page, 100);
         Page<FridgeItem> recipePage = fridgeItemRepository.findAllByUser(user, pageable);
         return ResponseEntity.ok(recipePage.map(FridgeItemResponseDTO::new));
+    }
+
+    @Transactional
+    public ResponseEntity<String> updateItems(Long itemId,FridgeItemRequestDTO fridgeItemRequestDTO, UserDetailsImpl userDetails) {
+        FridgeItem fridgeItem = fridgeItemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("아이템를 찾을 수 없습니다."));
+        if (!fridgeItem.getUser().getId().equals(userDetails.getUser().getId())) throw new IllegalArgumentException("사용자의 아이템이 아닙니다.");
+        // 데이터 수정
+        fridgeItem.update(fridgeItemRequestDTO);
+        fridgeItemRepository.save(fridgeItem);
+        return ResponseEntity.ok("냉장고 아이템이 수정되었습니다.");
     }
 
     @Transactional

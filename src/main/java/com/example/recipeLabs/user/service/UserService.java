@@ -46,13 +46,14 @@ public class UserService {
     private final ImageTransformService imageTransformService;
     private final RedisService redisService;
     private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
 
     /* 회원가입 - 메일 전송 */
     @Transactional
     public ResponseEntity<String> createUser(UserCreateRequestDTO userCreateRequestDTO){
         // 이메일 중복 검사
         if (userRepository.findByEmailAndProvider(userCreateRequestDTO.getEmail(),Provider.LOCAL).isPresent()) throw new IllegalArgumentException("중복된 Email 입니다.");
+        // 이름 중복 검사
+        if (userRepository.findByName(userCreateRequestDTO.getName()).isPresent()) throw new IllegalArgumentException("중복된 이름입니다.");
         // 비밀번호 일치 검사
         if (!userCreateRequestDTO.getPassword().equals(userCreateRequestDTO.getPasswordCheck())) throw new IllegalArgumentException("비밀번호 확인이 일치하지 않습니다.");
         // 사용자 메일 인증 코드
@@ -107,6 +108,8 @@ public class UserService {
     @Transactional
     public ResponseEntity<String> updateUserInfo(UserUpdateRequestDTO requestDTO, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
+        if (userRepository.findByName(requestDTO.getName()).isPresent()) throw new IllegalArgumentException("중복된 이름입니다.");
+
         user.updateInfo(requestDTO);
         userRepository.save(user);
         return ResponseEntity.ok().body("사용자 정보가 변경되었습니다.");
