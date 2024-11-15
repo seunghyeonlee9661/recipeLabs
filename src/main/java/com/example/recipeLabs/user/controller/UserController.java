@@ -58,7 +58,7 @@ public class UserController {
         return ResponseEntity.ok("로그아웃 요청이 성공적으로 처리되었습니다.");
     }
 
-    /* 사용자 회원가입 - 이메일 발송 */
+    // 사용자 회원가입 - 이메일 발송
     @PostMapping("")
     @Operation(summary = "회원가입", description = "새로운 사용자를 생성하고 이메일 인증을 위해 메일을 전송합니다.")
     @ApiResponses(value = {
@@ -71,7 +71,7 @@ public class UserController {
         return userService.createUser(requestDTO);
     }
 
-    /* 사용자 회원가입 - 이메일 링크 승인*/
+    // 사용자 회원가입 - 이메일 링크 승인
     @GetMapping("/verify")
     @Operation(summary = "회원가입 - 이메일 인증", description = "이메일을 통해 발송된 코드를 입력받아 사용자의 계정을 활성화합니다.")
     @ApiResponses(value = {
@@ -86,7 +86,7 @@ public class UserController {
         return userService.verifyUser(userId, code);
     }
 
-    /* 사용자 탈퇴 */
+    // 사용자 탈퇴
     @DeleteMapping("")
     @Operation(summary = "회원 탈퇴", description = "인증된 사용자를 삭제하고 관련 쿠키 및 데이터를 제거합니다.")
     @ApiResponses(value = {
@@ -100,7 +100,7 @@ public class UserController {
         return userService.removeUser(userDetails,res);
     }
 
-    /* 사용자 정보 요청 */
+    // 사용자 정보 요청
     @GetMapping("")
     @Operation(summary = "사용자 정보 조회", description = "인증된 사용자의 정보를 조회합니다.")
     @ApiResponses(value = {
@@ -112,7 +112,7 @@ public class UserController {
         return ResponseEntity.ok(new UserResponseDTO(userDetails.getUser()));
     }
 
-    /* 사용자 정보 수정 */
+    // 사용자 정보 수정
     @PutMapping("/info")
     @Operation(summary = "사용자 정보 수정", description = "인증된 사용자의 정보를 수정합니다.")
     @ApiResponses(value = {
@@ -127,7 +127,7 @@ public class UserController {
         return userService.updateUserInfo(requestDTO,userDetails);
     }
 
-    /* 사용자 이미지 수정 */
+    // 사용자 이미지 수정
     @PutMapping("/image")
     @Operation(summary = "사용자 이미지 수정", description = "인증된 사용자의 프로필 이미지를 수정합니다. 기존 이미지는 삭제되고 새 이미지는 WebP 형식으로 변환하여 저장됩니다.")
     @ApiResponses(value = {
@@ -142,7 +142,7 @@ public class UserController {
         return userService.updateUserImage(image,userDetails);
     }
 
-    /* 사용자 비밀번호 수정 */
+    // 사용자 비밀번호 수정
     @PutMapping("/password")
     @Operation(summary = "사용자 비밀번호 수정", description = "사용자의 비밀번호를 수정합니다. 기존 비밀번호와 새로운 비밀번호를 입력받습니다.")
     @ApiResponses(value = {
@@ -157,7 +157,7 @@ public class UserController {
         return userService.updateUserPassword(requestDTO,userDetails);
     }
 
-    /* 사용자 비밀번호 초기화 - 이메일 발송 */
+    // 사용자 비밀번호 초기화 - 이메일 발송
     @PostMapping("/reset")
     @Operation(summary = "사용자 비밀번호 초기화 이메일 발송", description = "사용자에게 비밀번호 초기화 이메일을 발송합니다. 이메일에 포함된 링크를 통해 비밀번호를 리셋할 수 있습니다.")
     @ApiResponses(value = {
@@ -170,7 +170,7 @@ public class UserController {
         return userService.sendUserPasswordResetEmail(email);
     }
 
-    /* 사용자 비밀번호 초기화 - 승인 */
+    // 사용자 비밀번호 초기화 - 승인
     @PutMapping("/reset")
     @Operation(summary = "사용자 비밀번호 초기화 승인", description = "사용자가 비밀번호 초기화 요청을 승인하고 새 비밀번호를 설정합니다.")
     @ApiResponses(value = {
@@ -183,9 +183,9 @@ public class UserController {
         return userService.resetUserPassword(requestDTO);
     }
 
-    /*______________________________사용자 관련 정보 요청_________________________________ */
+    //______________________________사용자 관련 정보 요청_________________________________
 
-    /* 사용자 레시피 정보 요청 */
+    // 사용자 레시피 정보 요청
     @GetMapping("/recipes")
     @Operation(summary = "사용자의 작성 레시피 정보 요청", description = "사용자가 작성한 레시피 정보를 페이지네이션하여 요청합니다.")
     @ApiResponses(value = {
@@ -198,7 +198,7 @@ public class UserController {
         return userService.findUserRecipes(userDetails,page);
     }
 
-    /* 사용자 즐겨찾기 정보 요청 */
+    // 사용자 즐겨찾기 정보 요청
     @GetMapping("/favorites")
     @Operation(summary = "사용자의 즐겨찾기 레시피 정보 요청", description = "사용자가 즐겨찾기한 레시피 정보를 페이지네이션하여 요청합니다.")
     @ApiResponses(value = {
@@ -210,4 +210,47 @@ public class UserController {
             @RequestParam(value = "page", defaultValue = "0") @Parameter(description = "조회할 페이지 번호 (기본값: 0)") int page){
         return userService.findUserFavorites(userDetails,page);
     }
+
+    //______________________________사용자 팔로우_________________________________
+
+    // 사용자 팔로우 조회
+    @GetMapping("/follows")
+    @Operation(summary = "사용자의 작성 레시피 정보 요청", description = "사용자가 팔로우한 다른 사용자의 목록을 요청합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용자가 팔로우한 다른 사용자 목록 반환", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 사용자 정보", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<Page<UserSimpleResponseDTO>> findUserFollow(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(value = "page", defaultValue = "0") @Parameter(description = "조회할 페이지 번호 (기본값: 0)") int page){
+        return userService.findUserFollow(userDetails,page);
+    }
+
+    // 사용자 팔로우 설정
+    @PostMapping("/follows/{userId}")
+    @Operation(summary = "사용자 팔로우 설정", description = "사용자가 다른 사용자에 대해 팔로우 설정을 변경합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용자의 팔로우 설정 변경 결과를 반환", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 사용자 정보", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<String> setUserFollow(
+            @PathVariable @Parameter(description = "다른 사용자 ID") Long userId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return userService.setUserFollow(userId, userDetails);
+    }
+
+    // 사용자 팔로워 조회
+    @GetMapping("/followers")
+    @Operation(summary = "사용자의 작성 레시피 정보 요청", description = "사용자를 팔로우한 다른 사용자의 목록을 요청합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용자를 팔로우한 다른 사용자 목록 반환", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 사용자 정보", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<Page<UserSimpleResponseDTO>> findUserFollower(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam(value = "page", defaultValue = "0") @Parameter(description = "조회할 페이지 번호 (기본값: 0)") int page){
+        return userService.findUserFollower(userDetails,page);
+    }
+
+
 }

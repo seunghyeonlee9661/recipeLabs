@@ -186,6 +186,49 @@ public class UserService {
         return ResponseEntity.ok().body("사용자 비밀번호가 변경되었습니다.");
     }
 
+
+    //______________________________사용자 팔로우_________________________________
+
+    // 비밀번호 팔로우 조회
+    public ResponseEntity<Page<UserSimpleResponseDTO>> findUserFollow(UserDetailsImpl userDetails, int page){
+        Pageable pageable = PageRequest.of(page, 20);
+        User user = userDetails.getUser();
+        Page<User> recipePage = userRepository.findByFollowers(user, pageable);
+        return ResponseEntity.ok(recipePage.map(UserSimpleResponseDTO::new));
+    }
+
+    // 비밀번호 팔로우 설정
+    @Transactional
+    public ResponseEntity<String> setUserFollow(Long userId, UserDetailsImpl userDetails){
+        User user = userDetails.getUser();  // 현재 로그인한 사용자
+        User targetUser = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("대상 사용자를 찾을 수 없습니다."));  // 팔로우할 대상 사용자
+        // 이미 팔로우하고 있는지 확인
+        if (user.getFollowing().contains(targetUser)) {
+            // 현재 사용자가 targetUser를 팔로우 목록에서 삭제
+            user.getFollowing().remove(targetUser);
+            //  변경 사항 저장
+            userRepository.save(user);
+            
+            return ResponseEntity.ok("팔로우를 취소했습니다.");
+        }else{
+            // 현재 사용자가 targetUser를 팔로우하도록 설정
+            user.getFollowing().add(targetUser);
+            // 변경된 엔티티를 저장
+            userRepository.save(user);
+            return ResponseEntity.ok("팔로우를 설정했습니다.");
+        }
+    }
+
+
+
+    // 사용자 팔로워 조회
+    public ResponseEntity<Page<UserSimpleResponseDTO>> findUserFollower(UserDetailsImpl userDetails, int page){
+        Pageable pageable = PageRequest.of(page, 20);
+        User user = userDetails.getUser();
+        Page<User> recipePage = userRepository.findByFollowings(user, pageable);
+        return ResponseEntity.ok(recipePage.map(UserSimpleResponseDTO::new));
+    }
+
     //______________________________사용자 관련 정보 요청_________________________________
 
     // 사용자의 게시물 검색 기능

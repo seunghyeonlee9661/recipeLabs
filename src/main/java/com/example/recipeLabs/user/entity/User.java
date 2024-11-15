@@ -13,7 +13,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -21,29 +23,44 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 public class User {
+    //____________________________________엔티티 변수________________________________
+
+    // 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // ID 자동 생성 전략
     private Long id;
 
+    // 이메일
     @Column(length = 255, nullable = false)
     private String email;
 
+    // 패스워드
     @Column(length = 255, nullable = false)
     private String password;
 
+    // 계정 구분
     @Enumerated(EnumType.STRING)
     @Column(length = 50)
     private Provider provider; // Enum으로 정의
 
+    // 구분에 따른 OAuth 아이디
     @Column(length = 255, nullable = true)
     private String providerId;
 
-    @Column(length = 255, nullable = false)
+    // 사용자 이름
+    @Column(length = 255, nullable = false, unique = true)
     private String name;
 
+    // 사용자 소개글
+    @Lob
+    @Column(name = "introduction",nullable = true)
+    private String introduction;
+
+    // 프로필 이미지
     @Column(name = "profile_image", length = 255, nullable = true)
     private String profileImage;
 
+    // 생성일자
     @CreationTimestamp
     @Column(name = "created_at", updatable = false) // 수정 불가
     private LocalDateTime createdAt;
@@ -54,8 +71,22 @@ public class User {
 
     // 인증 코드 필드
     @Column(name = "email_verification_code", length = 255, nullable = true)
-    private String emailVerificationCode;  
+    private String emailVerificationCode;
 
+    // 팔로우하는 사람들 (이 사용자가 팔로우한 사용자들)
+    @ManyToMany
+    @JoinTable(
+            name = "follow", // 관계 테이블 이름
+            joinColumns = @JoinColumn(name = "follower_id"), // 팔로우하는 사람
+            inverseJoinColumns = @JoinColumn(name = "following_id") // 팔로우받는 사람
+    )
+    private Set<User> following = new HashSet<>();
+
+    // 팔로워들 (이 사용자에게 팔로우 받은 사람들)
+    @ManyToMany(mappedBy = "following")
+    private Set<User> followers = new HashSet<>();
+
+    //____________________________________관계 변수________________________________
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<Recipe> recipes;
 
@@ -67,10 +98,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<FridgeItem> fridgeItem;
-
-    @Lob
-    @Column(name = "introduction",nullable = true)
-    private String introduction;
 
     // 기본 회원가입
     public User(UserCreateRequestDTO requetDTO,String password, String code){

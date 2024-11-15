@@ -10,29 +10,36 @@ import java.time.LocalDateTime;
 @Getter
 public class UserResponseDTO {
 
-    @Schema(description = "사용자 ID", example = "1", required = true)
+    @Schema(description = "사용자 ID", example = "1")
     private Long id; // 사용자 ID
 
-    @Schema(description = "사용자 이메일", example = "user@example.com", required = true)
+    @Schema(description = "사용자 이메일", example = "user@example.com")
     private String email; // 사용자 이메일
 
-    @Schema(description = "사용자 제공자 정보", example = "GOOGLE", required = true)
+    @Schema(description = "사용자 제공자 정보", example = "GOOGLE")
     private Provider provider; // Enum으로 정의된 제공자 (예: GOOGLE, FACEBOOK)
 
-    @Schema(description = "사용자 제공자 ID", example = "google-12345", required = true)
+    @Schema(description = "사용자 제공자 ID", example = "google-12345")
     private String providerId; // 제공자에 의한 고유 ID
 
-    @Schema(description = "사용자 이름", example = "이승현", required = true)
+    @Schema(description = "사용자 이름", example = "이승현")
     private String name; // 사용자 
 
-    @Schema(description = "사용자 소개글", example = "요리를 좋아하는 자취생입니다.", required = true)
+    @Schema(description = "사용자 소개글", example = "요리를 좋아하는 자취생입니다.")
     private String introduction; // 사용자 이름
 
-    @Schema(description = "사용자 프로필 이미지 URL", example = "http://example.com/profile.jpg", required = true)
+    @Schema(description = "사용자 프로필 이미지 URL", example = "http://example.com/profile.jpg")
     private String profileImage; // 사용자 프로필 이미지 URL
 
-    @Schema(description = "사용자 생성일", example = "2024-01-01T10:00:00", required = true)
+    @Schema(description = "사용자 생성일", example = "2024-01-01T10:00:00")
     private LocalDateTime createdAt; // 사용자 생성일
+
+    @Schema(description = "사용자 팔로우 수", example = "10")
+    private int follow; // 사용자 팔로우 수
+
+    @Schema(description = "사용자 팔로워 수", example = "20")
+    private int following; // 사용자 팔로워 수
+
 
     public UserResponseDTO(User user){
         this.id = user.getId();
@@ -43,5 +50,7 @@ public class UserResponseDTO {
         this.introduction = user.getIntroduction();
         this.profileImage = user.getProfileImage();
         this.createdAt = user.getCreatedAt();
+        this.follow = user.getFollowing().size();  // 팔로우한 사람 수
+        this.following = user.getFollowers().size();  // 팔로워 수
     }
 }
