@@ -80,7 +80,7 @@ public class User {
             joinColumns = @JoinColumn(name = "follower_id"), // 팔로우하는 사람
             inverseJoinColumns = @JoinColumn(name = "following_id") // 팔로우받는 사람
     )
-    private Set<User> following = new HashSet<>();
+    private Set<User> followings = new HashSet<>();
 
     // 팔로워들 (이 사용자에게 팔로우 받은 사람들)
     @ManyToMany(mappedBy = "following")

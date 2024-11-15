@@ -32,13 +32,12 @@ import java.util.Map;
 작성자 : 이승현
 JWT 생성, 검증을 맡은 클래스
 */
-@Slf4j(topic = "[JWT]")
+@Slf4j(topic = "[JwtUtil]")
 @Component
 public class JwtUtil {
     public static final String AUTHORIZATION_HEADER = "Authorization"; // Header KEY 값
     public static final String BEARER_PREFIX = "Bearer "; // Token 식별자
-//    private final long ACCESS_TOKEN_VALIDITY = 60 * 60 * 1000L; // Access Token 만료시간 : 1시간
-    private final long ACCESS_TOKEN_VALIDITY = 10 * 1000L; // Access Token 만료시간 : 1시간
+    private final long ACCESS_TOKEN_VALIDITY = 60 * 60 * 1000L; // Access Token 만료시간 : 1시간
 
     @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
     private String secretKey;
