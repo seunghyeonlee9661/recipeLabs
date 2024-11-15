@@ -37,7 +37,7 @@ public class FridgeController {
 
     /* TODO 검색 필터링용! */
     // 냉장고 아이템 목록
-    @PutMapping("")
+    @PutMapping("/{itemId}")
     public ResponseEntity<String> updateItems(
             @PathVariable @Parameter(description = "아이템 ID") Long itemId,
             @RequestBody FridgeItemRequestDTO fridgeItemRequestDTO,
@@ -46,7 +46,7 @@ public class FridgeController {
     }
 
     // 냉장고 아이템 제거
-    @DeleteMapping("")
+    @DeleteMapping("/{itemId}")
     public ResponseEntity<String> deleteItem(
             @PathVariable @Parameter(description = "아이템 ID") Long itemId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
