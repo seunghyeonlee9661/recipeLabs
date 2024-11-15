@@ -22,8 +22,11 @@ public class UserResponseDTO {
     @Schema(description = "사용자 제공자 ID", example = "google-12345", required = true)
     private String providerId; // 제공자에 의한 고유 ID
 
-    @Schema(description = "사용자 이름", example = "John Doe", required = true)
-    private String name; // 사용자 이름
+    @Schema(description = "사용자 이름", example = "이승현", required = true)
+    private String name; // 사용자 
+
+    @Schema(description = "사용자 소개글", example = "요리를 좋아하는 자취생입니다.", required = true)
+    private String introduction; // 사용자 이름
 
     @Schema(description = "사용자 프로필 이미지 URL", example = "http://example.com/profile.jpg", required = true)
     private String profileImage; // 사용자 프로필 이미지 URL
@@ -37,6 +40,7 @@ public class UserResponseDTO {
         this.provider = user.getProvider();
         this.providerId = user.getProviderId();
         this.name = user.getName();
+        this.introduction = user.getIntroduction();
         this.profileImage = user.getProfileImage();
         this.createdAt = user.getCreatedAt();
     }
