@@ -110,7 +110,7 @@ public class JwtUtil {
         log.info("addTokenToRedis - 레디스 토큰 추가 작업 시작");
         String strippedAccessToken = substringToken(accessToken); // BEARER_PREFIX 제거
         log.info("addTokenToRedis - 토큰 PREFIX 제거 : {}",strippedAccessToken);
-        redisService.save(RedisService.REFRESH_TOKEN_PREFIX,strippedAccessToken, refreshToken, RedisService.REFRESH_TOKEN_VALIDITY);
+        redisService.save(RedisService.REFRESH_TOKEN_PREFIX,strippedAccessToken,refreshToken,RedisService.REFRESH_TOKEN_VALIDITY);
     }
 
     // JWT Cookie 삭제

@@ -47,7 +47,7 @@ public class UserService {
     private final RedisService redisService;
     private final JwtUtil jwtUtil;
 
-    /* 회원가입 - 메일 전송 */
+    // 회원가입 - 메일 전송
     @Transactional
     public ResponseEntity<String> createUser(UserCreateRequestDTO userCreateRequestDTO){
         // 이메일 중복 검사
@@ -76,7 +76,7 @@ public class UserService {
         }
     }
 
-    /* 회원가입 - 인증 완료 */
+    // 회원가입 - 인증 완료
     @Transactional
     public ResponseEntity<String> verifyUser(Long userId,String code){
         User user = userRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("존재하지 않는 사용자 입니다."));
@@ -89,7 +89,7 @@ public class UserService {
         }
     }
 
-    /* 회원 탈퇴*/
+    // 회원 탈퇴
     @Transactional
     public ResponseEntity<String> removeUser(UserDetailsImpl userDetails, HttpServletResponse res) {
         User user = userDetails.getUser();
@@ -104,18 +104,21 @@ public class UserService {
         return ResponseEntity.ok().body("회원 탈퇴가 완료되었습니다.");
     }
 
-    /* 회원 정보 수정*/
+    // 회원 정보 수정
     @Transactional
     public ResponseEntity<String> updateUserInfo(UserUpdateRequestDTO requestDTO, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        if (userRepository.findByName(requestDTO.getName()).isPresent()) throw new IllegalArgumentException("중복된 이름입니다.");
-
-        user.updateInfo(requestDTO);
+        if (!requestDTO.getName().equals(user.getName())){
+            String newName = requestDTO.getName();
+            if (userRepository.findByName(newName).isPresent()) throw new IllegalArgumentException("중복된 이름입니다.");
+            user.updateName(newName);
+        }
+        user.updateIntroduction(requestDTO.getIntroduction());
         userRepository.save(user);
         return ResponseEntity.ok().body("사용자 정보가 변경되었습니다.");
     }
 
-    /* 회원 이미지 수정*/
+    // 회원 이미지 수정
     @Transactional
     public ResponseEntity<String> updateUserImage(MultipartFile image, UserDetailsImpl userDetails) throws IOException {
         User user = userDetails.getUser();
@@ -131,7 +134,7 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.CREATED).body("사용자 이미지가 변경되었습니다.");
     }
 
-    /* 회원 비밀번호 수정*/
+    // 회원 비밀번호 수정
     @Transactional
     public ResponseEntity<String> updateUserPassword(UserPasswordUpdateRequestDTO requestDTO, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
@@ -147,7 +150,7 @@ public class UserService {
         return ResponseEntity.ok().body("사용자 비밀번호가 변경되었습니다.");
     }
 
-    /* 비밀번호 초기화 메일 전송 */
+    // 비밀번호 초기화 메일 전송
     @Transactional
     public ResponseEntity<String> sendUserPasswordResetEmail(String email){
         User user = userRepository.findByEmailAndProvider(email, Provider.LOCAL).orElseThrow(() -> new IllegalArgumentException("이메일에 해당하는 LOCAL 계정 사용자가 존재하지 않습니다."));
@@ -166,7 +169,7 @@ public class UserService {
         }
     }
 
-    /* 비밀번호 초기화 승인 */
+    // 비밀번호 초기화 승인
     @Transactional
     public ResponseEntity<String> resetUserPassword(UserPasswordResetRequestDTO requestDTO){
         // redis에서 리셋 코드로 사용자 이메일 확인
@@ -183,16 +186,16 @@ public class UserService {
         return ResponseEntity.ok().body("사용자 비밀번호가 변경되었습니다.");
     }
 
-    /*______________________________사용자 관련 정보 요청_________________________________ */
+    //______________________________사용자 관련 정보 요청_________________________________
 
-    /* 사용자의 게시물 검색 기능 */
+    // 사용자의 게시물 검색 기능
     public ResponseEntity<Page<RecipeSimpleResponseDTO>> findUserRecipes(UserDetailsImpl userDetails, int page){
         Pageable pageable = PageRequest.of(page, 8, Sort.by(Sort.Order.desc("id")));
         Page<Recipe> recipePage  = recipeRepository.findByUser(userDetails.getUser(),pageable);
         return ResponseEntity.ok(recipePage.map(RecipeSimpleResponseDTO::new));
     }
 
-    /* 사용자 즐겨찾기한 게시물 검색 기능 */
+    // 사용자 즐겨찾기한 게시물 검색 기능
     public ResponseEntity<Page<RecipeSimpleResponseDTO>> findUserFavorites(UserDetailsImpl userDetails, int page){
         Pageable pageable = PageRequest.of(page, 8, Sort.by(Sort.Order.desc("id")));
         Page<Favorite> recipeFavoritePage   = favoriteRepository.findByUser(userDetails.getUser(),pageable);

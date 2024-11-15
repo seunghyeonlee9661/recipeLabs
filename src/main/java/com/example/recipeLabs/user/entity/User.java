@@ -99,6 +99,14 @@ public class User {
         this.introduction = requestDTO.getIntroduction();
     }
 
+    public void updateName(String name){
+        this.name = name;
+    }
+
+    public void updateIntroduction(String introduction){
+        this.introduction = introduction;
+    }
+
     public void updateImage(String image){
         this.profileImage = image;
     }
