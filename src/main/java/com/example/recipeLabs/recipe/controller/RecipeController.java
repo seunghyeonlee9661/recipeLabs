@@ -233,7 +233,7 @@ public class RecipeController {
     }
 
     // 레시피 재료 제거
-    @DeleteMapping("/{recipeId}/ingredient")
+    @DeleteMapping("/{recipeId}/ingredient/{ingredientId}")
     @Operation(summary = "레시피 태그 제거", description = "레시피 ID에 해당하는 재료를 제거합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "레시피 재료 제거 성공", content = @Content(mediaType = "application/json")),
@@ -242,7 +242,7 @@ public class RecipeController {
     })
     public ResponseEntity<String> deleteIngredient(
             @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
-            @RequestParam  @Parameter(description = "재료 ID") Long ingredientId,
+            @PathVariable @Parameter(description = "재료 ID") Long ingredientId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.deleteIngredient(recipeId,ingredientId, userDetails);
     }
@@ -257,7 +257,7 @@ public class RecipeController {
     }
 
     // 레시피 태그 추가
-    @PostMapping("/{recipeId}/tags")
+    @PostMapping("/{recipeId}/tags/{tagId}")
     @Operation(summary = "레시피 태그 추가", description = "레시피 ID에 해당하는 태그를 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "레시피 태그 추가 성공", content = @Content(mediaType = "application/json")),
@@ -266,13 +266,13 @@ public class RecipeController {
     })
     public ResponseEntity<String> updateRecipeTag(
             @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
-            @RequestParam  @Parameter(description = "태그 ID") Long tagId,
+            @PathVariable @Parameter(description = "태그 ID") Long tagId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.updateRecipeTag(recipeId, tagId, userDetails);
     }
 
     // 레시피 태그 제거
-    @DeleteMapping("/{recipeId}/tags")
+    @DeleteMapping("/{recipeId}/tags/{tagId}")
     @Operation(summary = "레시피 태그 제거", description = "레시피 ID에 해당하는 태그를 제거합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "레시피 태그 제거 성공", content = @Content(mediaType = "application/json")),
@@ -281,7 +281,7 @@ public class RecipeController {
     })
     public ResponseEntity<String> deleteRecipeTag(
             @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
-            @RequestParam  @Parameter(description = "태그 ID") Long tagId,
+            @PathVariable @Parameter(description = "태그 ID") Long tagId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
         return recipeService.deleteRecipeTag(recipeId,tagId, userDetails);
     }

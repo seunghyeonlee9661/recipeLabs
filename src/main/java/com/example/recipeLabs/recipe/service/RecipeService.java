@@ -189,12 +189,16 @@ public class RecipeService {
     }
     
     //_________________레시피 재료 기능___________________________
-    // 레시피 재료 - 추가
     @Transactional
-    public ResponseEntity<String> createIngredient(Long recipeId, IngredientRequestDTO requestDTO, UserDetailsImpl userDetails){
+    public ResponseEntity<String> createIngredient(Long recipeId, IngredientRequestDTO requestDTO, UserDetailsImpl userDetails) {
         // 레시피 확인
-        Recipe recipe = validateRecipeOwner(recipeId,userDetails);
-        Ingredient ingredient = new Ingredient(recipe,requestDTO);
+        Recipe recipe = validateRecipeOwner(recipeId, userDetails);
+
+        // 이미 같은 이름의 재료가 있는지 확인
+        boolean ingredientExists = recipe.getIngredients().stream().anyMatch(ingredient -> ingredient.getName().equalsIgnoreCase(requestDTO.getName()));
+        if (ingredientExists) return ResponseEntity.status(HttpStatus.CONFLICT).body("같은 이름의 재료가 이미 존재합니다.");
+        // 새로운 재료 추가
+        Ingredient ingredient = new Ingredient(recipe, requestDTO);
         ingredientRepository.save(ingredient);
         return ResponseEntity.status(HttpStatus.CREATED).body("재료가 추가되었습니다.");
     }
@@ -228,6 +232,9 @@ public class RecipeService {
         Recipe recipe = validateRecipeOwner(recipeId,userDetails);
         // 레시피 태그 확인
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new IllegalArgumentException("태그를 찾을 수 없습니다."));
+        boolean tagExists = recipe.getTags().stream().anyMatch(existingTag -> existingTag.getId().equals(tagId));
+        if (tagExists) return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 해당 태그가 추가되어 있습니다.");
+        // 새로운 태그 추가
         recipe.getTags().add(tag);
         recipeRepository.save(recipe);
         return ResponseEntity.status(HttpStatus.CREATED).body("태그가 추가되었습니다.");
