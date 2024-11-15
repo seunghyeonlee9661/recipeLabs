@@ -165,7 +165,7 @@ public class RecipeService {
         reviewRepository.save(review);
         return ResponseEntity.status(HttpStatus.CREATED).body("리뷰가 추가되었습니다.");
     }
-    /* 레시피 리뷰 - 수정 */
+    // 레시피 리뷰 - 수정
     @Transactional
     public ResponseEntity<String> updateRecipeReview(Long recipeId, Long reviewId, ReviewRequestDTO requestDTO, UserDetailsImpl userDetails){
         // 리뷰 확인
@@ -175,9 +175,9 @@ public class RecipeService {
         // 리뷰 내용 업데이트
         review.updateReview(requestDTO);
         reviewRepository.save(review);
-        return ResponseEntity.status(HttpStatus.CREATED).body("리뷰가 추가되었습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("리뷰가 수정되었습니다.");
     }
-    /* 레시피 리뷰 - 제거 */
+    // 레시피 리뷰 - 제거
     @Transactional
     public ResponseEntity<String> deleteRecipeReview(Long recipeId, Long reviewId, UserDetailsImpl userDetails){
         // 리뷰 확인
@@ -188,20 +188,19 @@ public class RecipeService {
         return ResponseEntity.status(HttpStatus.CREATED).body("리뷰가 제거되었습니다.");
     }
     
-    /*_________________레시피 재료 기능___________________________*/
-    /* 레시피 재료 - 추가 */
+    //_________________레시피 재료 기능___________________________
+    // 레시피 재료 - 추가
     @Transactional
-    public ResponseEntity<String> updateRecipeIngredient(Long recipeId, IngredientRequestDTO requestDTO, UserDetailsImpl userDetails){
+    public ResponseEntity<String> createIngredient(Long recipeId, IngredientRequestDTO requestDTO, UserDetailsImpl userDetails){
         // 레시피 확인
         Recipe recipe = validateRecipeOwner(recipeId,userDetails);
         Ingredient ingredient = new Ingredient(recipe,requestDTO);
-        recipe.getIngredients().add(ingredient);
-        recipeRepository.save(recipe);
+        ingredientRepository.save(ingredient);
         return ResponseEntity.status(HttpStatus.CREATED).body("재료가 추가되었습니다.");
     }
-    /* 레시피 재료 - 제거 */
+    // 레시피 재료 - 제거
     @Transactional
-    public ResponseEntity<String> deleteRecipeIngredient(Long recipeId, Long ingredientId, UserDetailsImpl userDetails){
+    public ResponseEntity<String> deleteIngredient(Long recipeId, Long ingredientId, UserDetailsImpl userDetails){
         // 레시피 확인
         Recipe recipe = validateRecipeOwner(recipeId,userDetails);
         // 레시피 재료 확인
@@ -215,14 +214,14 @@ public class RecipeService {
         }
     }
 
-    /*_________________레시피 태그 기능___________________________*/
-    /* 레시피 태그 - 검색 */
+    //_________________레시피 태그 기능___________________________
+    // 레시피 태그 - 검색
     @Transactional
     public ResponseEntity<List<Tag>> searchRecipeTags(String search){
         List<Tag> tagList = tagRepository.findByNameContaining(search);
         return ResponseEntity.status(HttpStatus.CREATED).body(tagList);
     }
-    /* 레시피 태그 - 추가 */
+    // 레시피 태그 - 추가
     @Transactional
     public ResponseEntity<String> updateRecipeTag(Long recipeId, Long tagId, UserDetailsImpl userDetails){
         // 레시피 확인
@@ -233,7 +232,7 @@ public class RecipeService {
         recipeRepository.save(recipe);
         return ResponseEntity.status(HttpStatus.CREATED).body("태그가 추가되었습니다.");
     }
-    /* 레시피 태그 - 제거 */
+    // 레시피 태그 - 제거
     @Transactional
     public ResponseEntity<String> deleteRecipeTag(Long recipeId, Long tagId, UserDetailsImpl userDetails){
         // 레시피 확인
@@ -250,8 +249,8 @@ public class RecipeService {
         }
     }
 
-    /*_________________레시피 단계 기능___________________________*/
-    /* 레시피 단계 추가 */
+    //_________________레시피 단계 기능___________________________
+    // 레시피 단계 추가
     @Transactional
     public ResponseEntity<String> createRecipeStep(Long recipeId, UserDetailsImpl userDetails) {
         // 레시피 확인

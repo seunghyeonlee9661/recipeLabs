@@ -201,7 +201,7 @@ public class RecipeController {
     }
 
     // 레시피 리뷰 제거
-    @DeleteMapping("/{recipeId}/review/{reviewId}")
+    @DeleteMapping("/{recipeId}/reviews/{reviewId}")
     @Operation(summary = "레시피 리뷰 제거", description = "레시피 ID에 해당하는 리뷰를 제거합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "레시피 리뷰 제거 성공", content = @Content(mediaType = "application/json")),
@@ -225,11 +225,11 @@ public class RecipeController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 또는 유효하지 않은 레시피 ID", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<String> updateRecipeIngredient(
+    public ResponseEntity<String> createIngredient(
             @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @RequestBody IngredientRequestDTO requestDTO,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return recipeService.updateRecipeIngredient(recipeId, requestDTO, userDetails);
+        return recipeService.createIngredient(recipeId, requestDTO, userDetails);
     }
 
     // 레시피 재료 제거
@@ -240,11 +240,11 @@ public class RecipeController {
             @ApiResponse(responseCode = "400", description = "잘못된 요청 또는 유효하지 않은 레시피 ID", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<String> deleteRecipeIngredient(
+    public ResponseEntity<String> deleteIngredient(
             @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @RequestParam  @Parameter(description = "재료 ID") Long ingredientId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return recipeService.deleteRecipeIngredient(recipeId,ingredientId, userDetails);
+        return recipeService.deleteIngredient(recipeId,ingredientId, userDetails);
     }
 
     //_____________________레시피 태그__________________
