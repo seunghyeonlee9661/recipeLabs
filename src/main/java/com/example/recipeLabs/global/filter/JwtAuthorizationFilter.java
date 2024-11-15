@@ -48,7 +48,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 if (newAccessToken != null) {
                     log.info("리프레시 토큰 기반으로 새로 토큰 발급!");
                     // 새 토큰을 기반으로 사용자 정보 확인
-                    Claims claims = jwtUtil.getUserInfoFromToken(accessTokenValue);
+                    Claims claims = jwtUtil.getUserInfoFromToken(newAccessToken);
                     log.info("토큰으로부터 claims 추출 {}" , claims.toString());
                     log.info("Subject : {}" , claims.getSubject());
                     log.info("provider : {}" , claims.get("provider", String.class));
