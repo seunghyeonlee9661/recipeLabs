@@ -73,18 +73,13 @@ public class User {
     @Column(name = "email_verification_code", length = 255, nullable = true)
     private String emailVerificationCode;
 
-    // 팔로우하는 사람들 (이 사용자가 팔로우한 사용자들)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "follow", // 관계 테이블 이름
-            joinColumns = @JoinColumn(name = "follower_id"), // 팔로우하는 사람
-            inverseJoinColumns = @JoinColumn(name = "following_id") // 팔로우받는 사람
-    )
-    private Set<User> followings = new HashSet<>();
+    // 팔로우
+    @OneToMany(mappedBy = "follower")
+    private Set<Follow> followings = new HashSet<>();  // 내가 팔로우한 사람들
 
-    // 팔로워들 (이 사용자에게 팔로우 받은 사람들)
-    @ManyToMany(mappedBy = "followings")
-    private Set<User> followers = new HashSet<>();
+    // 팔로워
+    @OneToMany(mappedBy = "following")
+    private Set<Follow> followers = new HashSet<>();
 
     //____________________________________관계 변수________________________________
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.REMOVE)

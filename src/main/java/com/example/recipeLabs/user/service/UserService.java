@@ -7,9 +7,11 @@ import com.example.recipeLabs.recipe.entity.Favorite;
 import com.example.recipeLabs.recipe.repository.FavoriteRepository;
 import com.example.recipeLabs.user.dto.*;
 import com.example.recipeLabs.recipe.entity.Recipe;
+import com.example.recipeLabs.user.entity.Follow;
 import com.example.recipeLabs.user.entity.User;
 import com.example.recipeLabs.global.enums.Provider;
 import com.example.recipeLabs.recipe.repository.RecipeRepository;
+import com.example.recipeLabs.user.repository.FollowRepository;
 import com.example.recipeLabs.user.repository.UserRepository;
 import com.example.recipeLabs.global.security.JwtUtil;
 import com.example.recipeLabs.global.security.UserDetailsImpl;
@@ -31,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -39,6 +42,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
+    private final FollowRepository followRepository;
     private final FavoriteRepository favoriteRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
@@ -202,19 +206,17 @@ public class UserService {
     public ResponseEntity<String> setUserFollow(Long userId, UserDetailsImpl userDetails){
         User user = userDetails.getUser();  // 현재 로그인한 사용자
         User targetUser = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("대상 사용자를 찾을 수 없습니다."));  // 팔로우할 대상 사용자
+        Optional<Follow> existingFollow = followRepository.findByFollowerAndFollowing(user, targetUser);
         // 이미 팔로우하고 있는지 확인
-        if (user.getFollowings().contains(targetUser)) {
-            // 현재 사용자가 targetUser를 팔로우 목록에서 삭제
-            user.getFollowings().remove(targetUser);
-            //  변경 사항 저장
-            userRepository.save(user);
+        if (existingFollow.isPresent()) {
+            // 이미 팔로우 중이면 팔로우 취소
+            followRepository.delete(existingFollow.get());
             return ResponseEntity.ok("팔로우를 취소했습니다.");
-        }else{
-            // 현재 사용자가 targetUser를 팔로우하도록 설정
-            user.getFollowings().add(targetUser);
-            // 변경된 엔티티를 저장
-            userRepository.save(user);
-            return ResponseEntity.ok("팔로우를 설정했습니다.");
+        } else {
+            // 팔로우 추가
+            Follow newFollow = new Follow(user,targetUser);
+            followRepository.save(newFollow);
+            return ResponseEntity.ok("팔로우를 추가했습니다.");
         }
     }
 

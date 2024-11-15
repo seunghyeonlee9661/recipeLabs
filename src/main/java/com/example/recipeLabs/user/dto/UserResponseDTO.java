@@ -38,7 +38,7 @@ public class UserResponseDTO {
     private int follow; // 사용자 팔로우 수
 
     @Schema(description = "사용자 팔로워 수", example = "20")
-    private int following; // 사용자 팔로워 수
+    private int follower; // 사용자 팔로워 수
 
 
     public UserResponseDTO(User user){
@@ -51,6 +51,6 @@ public class UserResponseDTO {
         this.profileImage = user.getProfileImage();
         this.createdAt = user.getCreatedAt();
         this.follow = user.getFollowings().size();  // 팔로우한 사람 수
-        this.following = user.getFollowers().size();  // 팔로워 수
+        this.follower = user.getFollowers().size();  // 팔로워 수
     }
 }
