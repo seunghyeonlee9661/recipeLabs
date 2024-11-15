@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.OptionalDouble;
 
 @Getter
 @Entity
@@ -94,5 +95,9 @@ public class Recipe {
                     .filter(step -> step.getStepOrder() < currentOrder && step.getStepOrder() >= newOrder)
                     .forEach(step -> step.setStepOrder(step.getStepOrder() + 1));
         }
+    }
+
+    public OptionalDouble getReviewAverage(){
+        return reviews.stream().mapToInt(Review::getRating).average();
     }
 }

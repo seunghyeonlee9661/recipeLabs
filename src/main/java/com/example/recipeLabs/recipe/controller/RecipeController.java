@@ -153,8 +153,24 @@ public class RecipeController {
 
     //_____________________레시피 리뷰__________________
 
+    // 레시피 리뷰 조회
+    @GetMapping("/{recipeId}/reviews")
+    @Operation(summary = "레시피 리뷰 불러오기", description = "레시피 ID에 해당하는 리뷰를 불러옵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "레시피 리뷰 조회 성공", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 또는 유효하지 않은 레시피 ID", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<Page<ReviewResponseDTO>> findRecipeReview(
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
+            @RequestParam(value = "page", defaultValue = "0") @Parameter(description = "조회할 페이지 번호 (기본값: 0)") int page,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return recipeService.findRecipeReview(recipeId,page, userDetails);
+    }
+
+
     // 레시피 리뷰 추가
-    @PostMapping("/{recipeId}/review")
+    @PostMapping("/{recipeId}/reviews")
     @Operation(summary = "레시피 리뷰 추가", description = "레시피 ID에 해당하는 리뷰를 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "레시피 리뷰 추가 성공", content = @Content(mediaType = "application/json")),
@@ -169,7 +185,7 @@ public class RecipeController {
     }
 
     // 레시피 리뷰 수정
-    @PostMapping("/review/{reviewId}")
+    @PostMapping("/{recipeId}/reviews/{reviewId}")
     @Operation(summary = "레시피 리뷰 수정", description = "레시피 ID에 해당하는 리뷰를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "레시피 리뷰 수정 성공", content = @Content(mediaType = "application/json")),
@@ -177,14 +193,15 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> updateRecipeReview(
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @PathVariable @Parameter(description = "리뷰 ID") Long reviewId,
             @RequestBody ReviewRequestDTO requestDTO,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return recipeService.updateRecipeReview(reviewId, requestDTO, userDetails);
+        return recipeService.updateRecipeReview(recipeId,reviewId, requestDTO, userDetails);
     }
 
     // 레시피 리뷰 제거
-    @DeleteMapping("/review/{reviewId}")
+    @DeleteMapping("/{recipeId}/review/{reviewId}")
     @Operation(summary = "레시피 리뷰 제거", description = "레시피 ID에 해당하는 리뷰를 제거합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "레시피 리뷰 제거 성공", content = @Content(mediaType = "application/json")),
@@ -192,9 +209,10 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "레시피를 찾을 수 없음", content = @Content(mediaType = "application/json"))
     })
     public ResponseEntity<String> deleteRecipeReview(
+            @PathVariable @Parameter(description = "레시피의 ID") Long recipeId,
             @PathVariable @Parameter(description = "리뷰 ID") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return recipeService.deleteRecipeReview(reviewId, userDetails);
+        return recipeService.deleteRecipeReview(recipeId,reviewId, userDetails);
     }
 
     //_____________________레시피 재료__________________

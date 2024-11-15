@@ -52,7 +52,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 } else {
                     // 리프레시 토큰이 만료된 경우
                     res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    res.getWriter().write("Refresh Token expired or invalid.");
+                    res.getWriter().write("리프레시 토큰이 만료되었습니다.");
                     return;
                 }
             }
