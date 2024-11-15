@@ -83,7 +83,7 @@ public class User {
     private Set<User> followings = new HashSet<>();
 
     // 팔로워들 (이 사용자에게 팔로우 받은 사람들)
-    @ManyToMany(mappedBy = "following")
+    @ManyToMany(mappedBy = "followings")
     private Set<User> followers = new HashSet<>();
 
     //____________________________________관계 변수________________________________

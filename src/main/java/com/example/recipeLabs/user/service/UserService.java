@@ -208,7 +208,6 @@ public class UserService {
             user.getFollowings().remove(targetUser);
             //  변경 사항 저장
             userRepository.save(user);
-            
             return ResponseEntity.ok("팔로우를 취소했습니다.");
         }else{
             // 현재 사용자가 targetUser를 팔로우하도록 설정
