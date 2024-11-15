@@ -174,7 +174,6 @@ public class JwtUtil {
             String newAccessToken = createAccessToken(user);
             // 새로운 Access Token과 기존 Refresh Token을 연관시켜 저장
             redisService.save(RedisService.REFRESH_TOKEN_PREFIX, substringToken(newAccessToken), storedRefreshToken, remainingValidity);
-
             return newAccessToken;
         }
         return null;

@@ -49,6 +49,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     log.info("리프레시 토큰 기반으로 새로 토큰 발급!");
                     // 새 토큰을 기반으로 사용자 정보 확인
                     Claims claims = jwtUtil.getUserInfoFromToken(accessTokenValue);
+                    log.info("토큰으로부터 claims 추출 {}" , claims.toString());
+                    log.info("Subject : {}" , claims.getSubject());
+                    log.info("provider : {}" , claims.get("provider", String.class));
                     UserDetails userDetails = userDetailsService.loadUserByUsernameAndProvider(claims.getSubject(),claims.get("provider", String.class)); // 새 토큰에서 사용자 정보를 추출
                     jwtUtil.addTokenToCookie(newAccessToken, res);// 새로운 액세스 토큰을 쿠키에 추가
                     setAuthentication(userDetails, req);// 사용자 인증 설정
