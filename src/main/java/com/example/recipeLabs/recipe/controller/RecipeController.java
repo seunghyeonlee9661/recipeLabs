@@ -185,7 +185,7 @@ public class RecipeController {
     }
 
     // 레시피 리뷰 수정
-    @PostMapping("/{recipeId}/reviews/{reviewId}")
+    @PutMapping("/{recipeId}/reviews/{reviewId}")
     @Operation(summary = "레시피 리뷰 수정", description = "레시피 ID에 해당하는 리뷰를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "레시피 리뷰 수정 성공", content = @Content(mediaType = "application/json")),
