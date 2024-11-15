@@ -16,12 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecipeService {
@@ -222,8 +224,12 @@ public class RecipeService {
     // 레시피 태그 - 검색
     @Transactional
     public ResponseEntity<List<Tag>> searchRecipeTags(String search){
-        List<Tag> tagList = tagRepository.findByNameContaining(search);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tagList);
+        log.info("검색어: {}", search);
+        if (search == null || search.trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(Collections.emptyList());
+        }
+        List<Tag> tagList = tagRepository.findByNameContainingIgnoreCase(search);
+        return ResponseEntity.status(HttpStatus.OK).body(tagList);
     }
     // 레시피 태그 - 추가
     @Transactional
@@ -237,7 +243,7 @@ public class RecipeService {
         // 새로운 태그 추가
         recipe.getTags().add(tag);
         recipeRepository.save(recipe);
-        return ResponseEntity.status(HttpStatus.CREATED).body("태그가 추가되었습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body("태그가 추가되었습니다.");
     }
     // 레시피 태그 - 제거
     @Transactional
