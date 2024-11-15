@@ -10,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import java.util.Map;
 작성자 : 이승현
 JWT 생성, 검증을 맡은 클래스
 */
+@Slf4j(topic = "[JWT]")
 @Component
 public class JwtUtil {
     public static final String AUTHORIZATION_HEADER = "Authorization"; // Header KEY 값
@@ -137,7 +139,7 @@ public class JwtUtil {
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
-            logger.error("Expired JWT t oken, 만료된 JWT token 입니다.");
+            logger.error("Expired JWT token, 만료된 JWT token 입니다.");
         } catch (UnsupportedJwtException e) {
             logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {
@@ -148,10 +150,12 @@ public class JwtUtil {
 
     // Access Token 만료시 Refresh Token을 찾아 새로운 Access Token을 발급 하는 기능
     public String refreshAccessToken(String accessToken) {
+        log.info("refreshAccessToken - 내부작업 시작");
         // 기존 토큰의 값 추출
         String strippedAccessToken = substringToken(accessToken); // BEARER_PREFIX 제거
         // 기존 토큰 값으로부터 Refresh Token을 Redis로부터 찾아옴
         String storedRefreshToken = redisService.get(RedisService.REFRESH_TOKEN_PREFIX,strippedAccessToken);
+        log.info("refreshAccessToken - 토큰으로부터 Redis 저장 토큰 추출 : {}",storedRefreshToken);
         // Refresh Token이 올바른지 확인
         if (storedRefreshToken != null && validateToken(storedRefreshToken)) {
             // Refresh Token으로부터 사용자의 정보 추출
