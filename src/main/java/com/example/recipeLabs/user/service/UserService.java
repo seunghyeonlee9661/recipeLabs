@@ -203,16 +203,16 @@ public class UserService {
         User user = userDetails.getUser();  // 현재 로그인한 사용자
         User targetUser = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("대상 사용자를 찾을 수 없습니다."));  // 팔로우할 대상 사용자
         // 이미 팔로우하고 있는지 확인
-        if (user.getFollowing().contains(targetUser)) {
+        if (user.getFollowings().contains(targetUser)) {
             // 현재 사용자가 targetUser를 팔로우 목록에서 삭제
-            user.getFollowing().remove(targetUser);
+            user.getFollowings().remove(targetUser);
             //  변경 사항 저장
             userRepository.save(user);
             
             return ResponseEntity.ok("팔로우를 취소했습니다.");
         }else{
             // 현재 사용자가 targetUser를 팔로우하도록 설정
-            user.getFollowing().add(targetUser);
+            user.getFollowings().add(targetUser);
             // 변경된 엔티티를 저장
             userRepository.save(user);
             return ResponseEntity.ok("팔로우를 설정했습니다.");
