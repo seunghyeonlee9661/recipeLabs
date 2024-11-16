@@ -41,7 +41,7 @@ public class RecipeResponseDTO {
     private final List<RecipeStepResponseDTO> stepList;
 
     @Schema(description = "레시피 인원수", example = "2")
-    private final int servings;
+    private final Integer servings;
 
     @Schema(description = "레시피가 사용자의 즐겨찾기 목록에 있는지 여부", example = "true")
     private final boolean isLiked;
