@@ -197,8 +197,8 @@ public class UserService {
     public ResponseEntity<Page<UserSimpleResponseDTO>> findUserFollow(UserDetailsImpl userDetails, int page){
         Pageable pageable = PageRequest.of(page, 20);
         User user = userDetails.getUser();
-        Page<User> recipePage = userRepository.findByFollowers(user, pageable);
-        return ResponseEntity.ok(recipePage.map(UserSimpleResponseDTO::new));
+        Page<User> followPage = userRepository.findByFollowers(user, pageable);
+        return ResponseEntity.ok(followPage.map(UserSimpleResponseDTO::new));
     }
 
     // 비밀번호 팔로우 설정
@@ -220,14 +220,12 @@ public class UserService {
         }
     }
 
-
-
     // 사용자 팔로워 조회
     public ResponseEntity<Page<UserSimpleResponseDTO>> findUserFollower(UserDetailsImpl userDetails, int page){
         Pageable pageable = PageRequest.of(page, 20);
         User user = userDetails.getUser();
-        Page<User> recipePage = userRepository.findByFollowings(user, pageable);
-        return ResponseEntity.ok(recipePage.map(UserSimpleResponseDTO::new));
+        Page<User> followerPage = userRepository.findByFollowings(user, pageable);
+        return ResponseEntity.ok(followerPage.map(UserSimpleResponseDTO::new));
     }
 
     //______________________________사용자 관련 정보 요청_________________________________
