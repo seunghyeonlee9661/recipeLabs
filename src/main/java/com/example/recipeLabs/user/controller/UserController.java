@@ -252,5 +252,17 @@ public class UserController {
         return userService.findUserFollower(userDetails,page);
     }
 
+    //______________________________다른 사용자 정보_________________________________
 
+    // 사용자 팔로우 조회
+    @GetMapping("/{userId}")
+    @Operation(summary = "다른 사용자 정보 호출", description = "다른 사용자의 정보를 불러옵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "다른 사용자 정보 반환", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "잘못된 사용자 정보", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<UserResponseDTO> findOtherUser(
+            @PathVariable @Parameter(description = "다른 사용자 ID") Long userId){
+        return userService.findOtherUser(userId);
+    }
 }

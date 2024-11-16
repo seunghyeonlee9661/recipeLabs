@@ -228,6 +228,14 @@ public class UserService {
         return ResponseEntity.ok(followerPage.map(UserSimpleResponseDTO::new));
     }
 
+    //______________________________타 사용자 정보 조회_________________________________
+
+    // 비밀번호 팔로우 조회
+    public ResponseEntity<UserResponseDTO> findOtherUser(Long userId){
+        User User = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("대상 사용자를 찾을 수 없습니다."));  // 팔로우할 대상 사용자
+        return ResponseEntity.ok(new UserResponseDTO(User));
+    }
+
     //______________________________사용자 관련 정보 요청_________________________________
 
     // 사용자의 게시물 검색 기능
