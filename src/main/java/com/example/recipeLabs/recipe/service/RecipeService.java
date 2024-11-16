@@ -5,9 +5,12 @@ import com.example.recipeLabs.global.service.ImageService;
 import com.example.recipeLabs.global.service.ImageTransformService;
 import com.example.recipeLabs.recipe.dto.*;
 import com.example.recipeLabs.recipe.entity.*;
+import com.example.recipeLabs.recipe.event.RecipeEvent;
+import com.example.recipeLabs.recipe.event.RecipeReviewEvent;
 import com.example.recipeLabs.recipe.repository.*;
 import com.example.recipeLabs.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +40,7 @@ public class RecipeService {
     private final IngredientRepository ingredientRepository;
     private final ImageService imageService;
     private final ImageTransformService imageTransformService;
+    private final ApplicationEventPublisher eventPublisher;
 
     // 레시피 작성
     @Transactional
@@ -44,6 +48,7 @@ public class RecipeService {
         // user 정보 가져오기 (id)
         User user = userDetails.getUser();
         Recipe recipe = recipeRepository.save(new Recipe(user));
+        eventPublisher.publishEvent(new RecipeEvent(this, recipe.getUser(), recipe));
         return ResponseEntity.status(HttpStatus.CREATED).body(recipe.getId().toString());
     }
 
@@ -152,7 +157,6 @@ public class RecipeService {
         Page<Review> reviewPage = reviewRepository.findAllByRecipeId(recipeId,pageable);
         return ResponseEntity.ok(reviewPage.map(ReviewResponseDTO::new));
     }
-
     // 레시피 리뷰 - 추가
     @Transactional
     public ResponseEntity<String> createRecipeReview(Long recipeId, ReviewRequestDTO requestDTO, UserDetailsImpl userDetails){
@@ -165,6 +169,8 @@ public class RecipeService {
         // 리뷰 데이터 생성
         Review review = new Review(userDetails.getUser(),recipe, requestDTO);
         reviewRepository.save(review);
+        //리뷰 작성 알림을 팔로우에게 발송
+        eventPublisher.publishEvent(new RecipeReviewEvent(this, recipe.getUser(), recipe));
         return ResponseEntity.status(HttpStatus.CREATED).body("리뷰가 추가되었습니다.");
     }
     // 레시피 리뷰 - 수정

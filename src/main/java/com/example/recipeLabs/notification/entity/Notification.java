@@ -4,6 +4,8 @@ import com.example.recipeLabs.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,13 +28,14 @@ public class Notification {
     @Column(name = "is_read", nullable = false)
     private boolean isRead = false; // 읽음 여부
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt; // 알림 생성 시간
+    // 생성일자
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false) // 수정 불가
+    private LocalDateTime createdAt;
 
     public Notification(User user, String message) {
         this.user = user;
         this.message = message;
-        this.createdAt = LocalDateTime.now();
     }
 
     public void markAsRead() {

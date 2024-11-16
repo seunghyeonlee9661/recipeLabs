@@ -19,6 +19,8 @@ import com.example.recipeLabs.global.service.EmailService;
 import com.example.recipeLabs.global.service.ImageService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -50,6 +52,9 @@ public class UserService {
     private final ImageTransformService imageTransformService;
     private final RedisService redisService;
     private final JwtUtil jwtUtil;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     // 회원가입 - 메일 전송
     @Transactional
