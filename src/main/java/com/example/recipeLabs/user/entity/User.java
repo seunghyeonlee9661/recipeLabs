@@ -101,6 +101,7 @@ public class User {
         this.emailVerificationCode = code;
     }
 
+
     // Oauth 유저 생성
     public User(String email, Provider provider, String providerId, String name, String profileImage) {
         this.email = email;
