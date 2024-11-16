@@ -1,8 +1,10 @@
 package com.example.recipeLabs.notification.dto;
 import com.example.recipeLabs.notification.entity.Notification;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class NotificationResposeDTO {
     private Long id;
     private String message; // 알림 내용
