@@ -1,5 +1,4 @@
 package com.example.recipeLabs.user.entity;
-//import com.example.recipeLabs.fridge.entity.FridgeItem;
 import com.example.recipeLabs.fridge.entity.FridgeItem;
 import com.example.recipeLabs.user.dto.UserCreateRequestDTO;
 import com.example.recipeLabs.recipe.entity.Recipe;
@@ -74,11 +73,10 @@ public class User {
     private String emailVerificationCode;
 
     // 팔로우
-    @OneToMany(mappedBy = "follower")
-    private Set<Follow> followings = new HashSet<>();  // 내가 팔로우한 사람들
+    @OneToMany(mappedBy = "follower", fetch = FetchType.EAGER)
+    private Set<Follow> followings = new HashSet<>();
 
-    // 팔로워
-    @OneToMany(mappedBy = "following")
+    @OneToMany(mappedBy = "following", fetch = FetchType.EAGER)
     private Set<Follow> followers = new HashSet<>();
 
     //____________________________________관계 변수________________________________
