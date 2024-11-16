@@ -38,8 +38,6 @@ public class NotificationService {
         return ResponseEntity.ok("읽음으로 변경했습니다.");
     }
 
-
-
     // 읽지 않은 알림 조회
     public ResponseEntity<List<NotificationResposeDTO>> findNotificationsUnread(UserDetailsImpl userDetails){
         User user = userDetails.getUser();
@@ -47,13 +45,8 @@ public class NotificationService {
         return ResponseEntity.ok( notifications.stream().map(NotificationResposeDTO::new).toList());
     }
 
-
-
-
     public void sendNotification(User user, String message) {
         Notification notification = new Notification(user, message);
         notificationRepository.save(notification);
     }
-
-
 }

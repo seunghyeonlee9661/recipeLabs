@@ -4,6 +4,7 @@ import com.example.recipeLabs.global.service.ImageTransformService;
 import com.example.recipeLabs.global.service.RedisService;
 import com.example.recipeLabs.recipe.dto.RecipeSimpleResponseDTO;
 import com.example.recipeLabs.recipe.entity.Favorite;
+import com.example.recipeLabs.recipe.event.RecipeReviewEvent;
 import com.example.recipeLabs.recipe.repository.FavoriteRepository;
 import com.example.recipeLabs.user.dto.*;
 import com.example.recipeLabs.recipe.entity.Recipe;
@@ -11,6 +12,7 @@ import com.example.recipeLabs.user.entity.Follow;
 import com.example.recipeLabs.user.entity.User;
 import com.example.recipeLabs.global.enums.Provider;
 import com.example.recipeLabs.recipe.repository.RecipeRepository;
+import com.example.recipeLabs.user.event.FollowEvent;
 import com.example.recipeLabs.user.repository.FollowRepository;
 import com.example.recipeLabs.user.repository.UserRepository;
 import com.example.recipeLabs.global.security.JwtUtil;
@@ -221,6 +223,7 @@ public class UserService {
             // 팔로우 추가
             Follow newFollow = new Follow(user,targetUser);
             followRepository.save(newFollow);
+            eventPublisher.publishEvent(new FollowEvent(this, user, targetUser));
             return ResponseEntity.ok("팔로우를 추가했습니다.");
         }
     }

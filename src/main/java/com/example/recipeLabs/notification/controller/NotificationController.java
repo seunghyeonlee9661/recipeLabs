@@ -33,6 +33,7 @@ import java.util.List;
 public class NotificationController {
     private final NotificationService notificationService;
 
+    // 알림 전체 조회
     @GetMapping("")
     @Operation(summary = "사용자 알림 전체", description = "사용자가 받은 모든 알림 목록을 확인합니다.")
     @ApiResponses({
@@ -46,6 +47,7 @@ public class NotificationController {
         return notificationService.findNotifications(userDetails,page);
     }
 
+    // 알림 읽음으로 설정
     @PutMapping("/{notificationId}")
     @Operation(summary = "알림 읽음 설정", description = "알림에 대해 읽음으로 상태를 변경합니다.")
     @ApiResponses({
@@ -59,6 +61,7 @@ public class NotificationController {
         return notificationService.setNotificationsRead(userDetails,notificationId);
     }
 
+    // 읽지 않은 알림 조회
     @GetMapping("/unread")
     @Operation(summary = "사용자 읽지 않은 알림", description = "사용자가 읽지 않은 알림 목록을 확인합니다.")
     @ApiResponses({
