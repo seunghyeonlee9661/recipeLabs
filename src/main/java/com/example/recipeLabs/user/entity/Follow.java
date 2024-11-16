@@ -3,6 +3,7 @@ package com.example.recipeLabs.user.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -24,9 +25,10 @@ public class Follow {
     @JoinColumn(name = "following_id")
     private User following;  // 팔로우된 사용자
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdDate;  // 팔로우 생성일
+    // 생성일자
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false) // 수정 불가
+    private LocalDateTime createdAt;
 
     public Follow(User follower, User following){
         this.follower = follower;
