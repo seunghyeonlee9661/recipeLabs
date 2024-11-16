@@ -46,6 +46,19 @@ public class NotificationController {
         return notificationService.findNotifications(userDetails,page);
     }
 
+    @PutMapping("/{notificationId}")
+    @Operation(summary = "알림 읽음 설정", description = "알림에 대해 읽음으로 상태를 변경합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "알림 변경 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "401", description = "인증 실패")
+    })
+    public ResponseEntity<String> setNotificationsRead(
+            @PathVariable @Parameter(description = "레시피의 단계 ID") Long notificationId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return notificationService.setNotificationsRead(userDetails,notificationId);
+    }
+
     @GetMapping("/unread")
     @Operation(summary = "사용자 읽지 않은 알림", description = "사용자가 읽지 않은 알림 목록을 확인합니다.")
     @ApiResponses({

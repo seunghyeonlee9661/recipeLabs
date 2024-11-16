@@ -29,6 +29,17 @@ public class NotificationService {
         return ResponseEntity.ok(notificationPage.map(NotificationResposeDTO::new));
     }
 
+    // 알림 전체 조회 - 페이지네이션
+    public ResponseEntity<String> setNotificationsRead(UserDetailsImpl userDetails, Long notificationId){
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(() -> new IllegalArgumentException("알림을 찾을 수 없습니다."));
+        if (!notification.getUser().getId().equals(userDetails.getUser().getId())) throw new IllegalArgumentException("알림 대상이 아닌 사용자입니다.");
+        notification.markAsRead();
+        notificationRepository.save(notification);
+        return ResponseEntity.ok("읽음으로 변경했습니다.");
+    }
+
+
+
     // 읽지 않은 알림 조회
     public ResponseEntity<List<NotificationResposeDTO>> findNotificationsUnread(UserDetailsImpl userDetails){
         User user = userDetails.getUser();
@@ -36,8 +47,13 @@ public class NotificationService {
         return ResponseEntity.ok( notifications.stream().map(NotificationResposeDTO::new).toList());
     }
 
+
+
+
     public void sendNotification(User user, String message) {
         Notification notification = new Notification(user, message);
         notificationRepository.save(notification);
     }
+
+
 }
