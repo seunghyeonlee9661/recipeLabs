@@ -238,8 +238,14 @@ public class UserService {
 
     //______________________________타 사용자 정보 조회_________________________________
 
-    // 비밀번호 팔로우 조회
+    // 타 사용자 정보 조회
     public ResponseEntity<UserResponseDTO> findOtherUser(Long userId){
+        User User = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("대상 사용자를 찾을 수 없습니다."));  // 팔로우할 대상 사용자
+        return ResponseEntity.ok(new UserResponseDTO(User));
+    }
+
+    // 비밀번호 팔로우 조회
+    public ResponseEntity<UserResponseDTO> findOtherUserRecipe(Long userId){
         User User = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("대상 사용자를 찾을 수 없습니다."));  // 팔로우할 대상 사용자
         return ResponseEntity.ok(new UserResponseDTO(User));
     }

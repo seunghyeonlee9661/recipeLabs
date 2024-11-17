@@ -56,7 +56,7 @@ public class RecipeService {
     @Transactional
     public ResponseEntity<Page<RecipeSimpleResponseDTO>> findRecipePage(int page) {
         Pageable pageable = PageRequest.of(page, 100);
-        Page<Recipe> recipePage = recipeRepository.findAll(pageable);
+        Page<Recipe> recipePage = recipeRepository.findByIsCompleteTrue(pageable);
         return ResponseEntity.ok(recipePage.map(RecipeSimpleResponseDTO::new));
     }
     // 레시피 id로 조회
@@ -64,6 +64,10 @@ public class RecipeService {
     public ResponseEntity<RecipeResponseDTO> findRecipe(Long recipeId, UserDetailsImpl userDetails) {
         // 레시피 정보 가져오기
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
+        if (!recipe.getIsComplete()) {
+            throw new IllegalArgumentException("완성되지 않은 레시피는 조회할 수 없습니다.");
+        }
+
         // 사용자 레시피 좋아요 상태 확인
         boolean isLiked = Optional.ofNullable(userDetails)
                 .map(UserDetailsImpl::getUser)
